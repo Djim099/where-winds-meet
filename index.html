@@ -48,7 +48,7 @@ html.lang-ja .section-tag{font-family:var(--ff-ja);letter-spacing:.04em;text-tra
 .lb:focus-visible{outline:2px solid var(--ember-hi);outline-offset:2px} .rv{opacity:0;transform:translateY(22px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
 .rv.show{opacity:1;transform:none}
 .d1{transition-delay:.12s}.d2{transition-delay:.24s}.d3{transition-delay:.36s}
-.d4{transition-delay:.48s}.d5{transition-delay:.6s} .hero{position:relative;width:100%;min-height:min(100vh,820px);height:min(100vh,820px);display:flex;align-items:flex-start;overflow:hidden} .hero-world{position:absolute;inset:0;z-index:0}
+.d4{transition-delay:.48s}.d5{transition-delay:.6s} .hero{position:relative;width:100%;min-height:min(100vh,820px);height:min(100vh,820px);display:flex;align-items:flex-start;justify-content:flex-start;overflow:hidden} .hero-world{position:absolute;inset:0;z-index:0}
 .hw-sky{position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 68% 22%,#4a2e0a 0%,#261408 38%,#160e06 65%,#100c06 100%)}
 .hw-sun{position:absolute;width:200px;height:200px;right:14%;top:8%;border-radius:50%;background:radial-gradient(circle,#c8943a 0%,#7a4a10 35%,transparent 70%);opacity:.24;filter:blur(16px)}
 .hw-m1{position:absolute;left:0;right:0;bottom:0;height:72%;background:linear-gradient(180deg,transparent 0%,#0e0906 60%,#0c0704 100%);clip-path:polygon(0 75%,3% 60%,8% 65%,12% 48%,17% 55%,22% 38%,27% 45%,31% 28%,36% 35%,40% 20%,44% 28%,49% 12%,53% 20%,57% 8%,60% 16%,64% 5%,67% 14%,71% 2%,74% 10%,78% 6%,82% 18%,86% 12%,90% 25%,94% 15%,97% 30%,100% 22%,100% 100%,0 100%)}
@@ -58,19 +58,19 @@ html.lang-ja .section-tag{font-family:var(--ff-ja);letter-spacing:.04em;text-tra
 .hw-m5{position:absolute;left:0;right:0;bottom:0;height:12%;background:#281808;clip-path:polygon(0 95%,8% 72%,16% 85%,24% 60%,32% 78%,40% 52%,48% 70%,56% 44%,64% 65%,72% 38%,80% 58%,88% 32%,94% 50%,100% 36%,100% 100%,0 100%)}
 .hw-mist{position:absolute;left:0;right:0;bottom:8%;height:28%;background:linear-gradient(180deg,transparent,rgba(180,140,90,.04) 40%,rgba(160,120,70,.06) 70%,transparent);animation:mist 22s ease-in-out infinite alternate}
 .hw-mist2{position:absolute;left:-20%;right:-20%;bottom:18%;height:18%;background:linear-gradient(180deg,transparent,rgba(180,140,90,.03) 50%,transparent);animation:mist 30s ease-in-out infinite alternate-reverse;animation-delay:-10s}
-@keyframes mist{from{transform:translateX(0)}to{transform:translateX(8%)}} .hero-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;display:none}.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;opacity:0;transition:opacity 1.4s ease}
+ .hero-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;display:none}.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;opacity:0;transition:opacity 1.4s ease}
 .hero-veil{display:none}
 .embers{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
 .em{position:absolute;border-radius:50%;background:radial-gradient(circle,var(--ember-hi),transparent);animation:rise var(--d,9s) var(--dl,0s) infinite ease-out}
 @keyframes rise{0%{opacity:0;transform:translate(0,0)}8%{opacity:var(--op,.2)}90%{opacity:var(--op,.2)}100%{opacity:0;transform:translate(var(--dx,10px),calc(-60vh))}}
 .hero-vtext-l,.hero-vtext-r{position:absolute;z-index:3;top:50%;transform:translateY(-50%);writing-mode:vertical-rl;text-orientation:upright;font-family:var(--ff-cn);font-weight:700;font-size:clamp(5rem,10vw,9rem);color:var(--ember);opacity:.03;pointer-events:none;user-select:none}
 .hero-vtext-l{left:1%}
-.hero-vtext-r{right:1%} .hero-content{position:relative;z-index:4;pointer-events:auto;max-width:1280px;width:100%;margin:0 auto;padding:clamp(90px,12vh,140px) 56px 60px} .hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:var(--ff-body);font-size:.82rem;font-style:italic;font-weight:400;letter-spacing:.03em;text-transform:none;color:#fff;margin-bottom:.9rem;background:rgba(28,18,8,.55);padding:5px 14px 5px 10px;border-left:2px solid #e74c3c}
+.hero-vtext-r{right:1%} .hero-content{position:relative;z-index:4;pointer-events:auto;max-width:1280px;width:100%;margin:0 auto;padding:clamp(90px,12vh,140px) 56px 60px} .hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:var(--ff-body);font-size:.95rem;font-style:italic;font-weight:400;letter-spacing:.03em;text-transform:none;color:#fff;margin-bottom:.9rem;background:rgba(28,18,8,.55);padding:5px 14px 5px 10px;border-left:2px solid #e74c3c}
 .hero-eyebrow::before{content:'';width:38px;height:1px;background:var(--ember);opacity:.8}
-h1.hero-hl{font-family:var(--ff-en);font-weight:900;font-size:clamp(1.6rem,3.8vw,3.2rem);line-height:1.0;letter-spacing:-.01em;color:#e74c3c;text-shadow:0 2px 12px rgba(0,0,0,1),0 4px 40px rgba(0,0,0,1),0 0 80px rgba(0,0,0,.9);margin-bottom:.6rem}
+h1.hero-hl{font-family:var(--ff-en);font-weight:900;font-size:clamp(2rem,4.8vw,4rem);line-height:1.0;letter-spacing:-.01em;color:#e74c3c;text-shadow:0 2px 12px rgba(0,0,0,1),0 4px 40px rgba(0,0,0,1),0 0 80px rgba(0,0,0,.9);margin-bottom:.6rem}
 html.lang-ko h1.hero-hl,html.lang-ja h1.hero-hl{font-size:clamp(2.5rem,7vw,6.5rem);line-height:1.1}
 .hero-hl-stroke{display:block;color:transparent;-webkit-text-stroke:1.2px rgba(255,255,255,.8);font-size:.72em;margin-top:.04em}
-.hero-sub{max-width:400px;font-size:clamp(.85rem,1.3vw,.95rem);font-weight:400;font-style:italic;color:#fff;line-height:1.75;margin-bottom:1.4rem;background:rgba(28,18,8,.75);padding:16px 20px;border-left:2px solid rgba(200,148,58,.45)}
+.hero-sub{max-width:560px;font-size:clamp(1.2rem,2.2vw,1.55rem);font-weight:400;font-style:italic;color:#fff;line-height:1.75;margin-bottom:1.4rem;background:rgba(28,18,8,.75);padding:16px 20px;border-left:2px solid rgba(200,148,58,.45)}
 html.lang-ko .hero-sub,html.lang-ja .hero-sub{font-style:normal;font-size:clamp(.92rem,1.5vw,1.08rem)} .hero-acts{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:1.2rem}
 .cta{
   display:inline-flex;align-items:center;
@@ -125,9 +125,7 @@ html.lang-ko .hero-sub,html.lang-ja .hero-sub{font-style:normal;font-size:clamp(
 @keyframes cta-shimmer{
   0%{left:-80%}55%,100%{left:130%}
 }
-@keyframes cta-pulse{
-  0%,100%{box-shadow:0 0 0 1px rgba(192,57,43,.8),0 8px 32px rgba(192,57,43,.6),0 2px 8px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.2)}
-  50%{box-shadow:0 0 0 2px rgba(231,76,60,1),0 12px 48px rgba(192,57,43,.85),0 0 60px rgba(192,57,43,.2),0 2px 8px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.2)}
+
 }
 .cta-icon{width:18px;height:18px;flex-shrink:0;opacity:.95}
 .cta::before{ content:'';position:absolute;inset:0; background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.28) 50%,transparent 70%); transform:translateX(-130%);transition:transform .7s ease
@@ -232,7 +230,7 @@ html.lang-ko .t-sub,html.lang-ja .t-sub{font-style:normal}
 .t-player.is-playing:hover .play-ring{opacity:1;pointer-events:auto}
 .play-ring::before{content:'';position:absolute;inset:-8px;border-radius:50%;border:1px solid rgba(200,148,58,.14);animation:pulse 3s ease-in-out infinite}
 .play-ring::after{content:'';position:absolute;inset:-18px;border-radius:50%;border:1px solid rgba(232,168,58,.18);animation:pulse 3s ease-in-out infinite .6s}
-@keyframes pulse{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.07);opacity:.25}}
+
 @keyframes cta-pulse{0%,100%{box-shadow:0 0 0 1px rgba(240,192,96,.4),0 4px 24px rgba(200,148,58,.25),inset 0 1px 0 rgba(255,255,255,.3)}50%{box-shadow:0 0 0 2px rgba(255,220,80,.7),0 6px 36px rgba(200,148,58,.5),0 0 60px rgba(200,148,58,.15),inset 0 1px 0 rgba(255,255,255,.35)}}
 .play-ring:hover{background:rgba(200,148,58,.25);box-shadow:0 0 40px rgba(200,148,58,.25)}
 .play-ring:focus-visible{outline:2px solid var(--ember-hi);outline-offset:4px}
@@ -370,7 +368,7 @@ html.lang-ko .w-desc,html.lang-ja .w-desc{font-style:normal;font-size:.78rem}
 .social-label{ font-family:var(--ff-en);font-size:.5rem;font-weight:600; letter-spacing:.18em;text-transform:uppercase; color:var(--ember);display:flex;flex-direction:column;gap:1px
 }
 .social-label span{color:rgba(255,255,255,.55);font-weight:400;letter-spacing:.12em} .stars{display:flex;gap:2px;align-items:center}
-.star{width:12px;height:12px;fill:#ffd760}
+.star{width:14px;height:14px;fill:#ffd760}
 .star-empty{opacity:.25} .steam-badge{ display:flex;align-items:center;gap:9px; border:1px solid rgba(200,148,58,.3); padding:6px 16px; background:rgba(200,148,58,.05)
 }
 .steam-logo{ display:flex;align-items:center;gap:6px; font-family:var(--ff-en);font-size:.62rem;font-weight:700; letter-spacing:.12em;text-transform:uppercase;color:#fff
@@ -633,6 +631,35 @@ html.lang-ko .final-cta-sub,html.lang-ja .final-cta-sub{font-style:normal}
 /* Make nav position:relative for absolute child */
 .nav{position:fixed !important}
 
+
+.skip-link{
+  position:absolute;top:-100px;left:16px;
+  background:#e74c3c;color:#fff;
+  font-family:var(--ff-en);font-size:.75rem;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:10px 20px;z-index:9999;
+  transition:top .2s ease;text-decoration:none
+}
+.skip-link:focus{top:8px}
+
+
+.social-text-group{
+  display:flex;flex-direction:column;gap:2px
+}
+.social-stars-group{
+  display:flex;flex-direction:column;gap:4px;align-items:flex-start
+}
+.social-top{
+  font-family:var(--ff-en);font-size:.6rem;font-weight:800;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:#ffffff;line-height:1.2
+}
+.social-bot{
+  font-family:var(--ff-en);font-size:.56rem;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(255,255,255,.75);line-height:1.2
+}
+
 </style>
   <!-- Preload LCP images -->
   <link rel="preload" as="image" href="assets/images/hero_poster.webp" fetchpriority="high">
@@ -640,13 +667,14 @@ html.lang-ko .final-cta-sub,html.lang-ja .final-cta-sub{font-style:normal}
 </head>
 <body>
 
+<a href="#hero" class="skip-link">Skip to content</a>
 <div id="cursor" aria-hidden="true"></div>
 <div id="cursor-ring" aria-hidden="true"></div>
 
 <!-- NAV -->
 <nav class="nav" id="nav">
   <div class="nav-id">
-    <img id="nav-logo" alt="Where Winds Meet logo" style="height:38px;width:auto;display:none;object-fit:contain">
+    <img id="nav-logo" alt="Where Winds Meet logo" width="180" height="38" style="height:38px;width:auto;display:none;object-fit:contain">
     <span id="nav-word">WHERE WINDS MEET</span>
   </div>
   <div class="nav-center-title">
@@ -735,7 +763,7 @@ html.lang-ko .final-cta-sub,html.lang-ja .final-cta-sub{font-style:normal}
     <div class="hero-acts rv d3" style="flex-wrap:wrap;gap:14px;align-items:center">
       <a href="#" class="cta" id="hero-cta" data-i18n="hero.cta" aria-label="Play Where Winds Meet on PC">
         <span class="cta-inner">
-          <svg class="cta-icon" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <svg class="cta-icon" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
             <path d="M9 2L10.5 7H16L11.5 10.5L13 15.5L9 12L5 15.5L6.5 10.5L2 7H7.5Z" fill="currentColor" opacity=".8"/>
           </svg>
           <span data-i18n="hero.cta">Claim Your Legend — Free</span>
@@ -778,32 +806,31 @@ html.lang-ko .final-cta-sub,html.lang-ja .final-cta-sub{font-style:normal}
 </section>
 
 
+<main id="main-content">
 <!-- SOCIAL PROOF STRIP -->
 <div class="social-strip" role="region" aria-label="Game statistics">
 
   <div class="social-item">
     <div class="social-num">102K+</div>
-    <div class="social-label">
-      <span data-i18n="social.rev_label">Reviews</span><br>
-      <span data-i18n="social.on_steam">on Steam</span>
+    <div class="social-text-group">
+      <span class="social-top" data-i18n="social.rev_label">Reviews</span>
+      <span class="social-bot" data-i18n="social.on_steam">on Steam</span>
     </div>
   </div>
 
   <div class="social-divider" aria-hidden="true"></div>
 
   <div class="social-item">
-    <div>
+    <div class="social-stars-group">
       <div class="stars" aria-label="5 stars — Very Positive rating">
-        <svg class="star" viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg>
-        <svg class="star" viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg>
-        <svg class="star" viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg>
-        <svg class="star" viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg>
-        <svg class="star" viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg>
+        <svg class="star" width="14" height="14" viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg>
+        <svg class="star" width="14" height="14" viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg>
+        <svg class="star" width="14" height="14" viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg>
+        <svg class="star" width="14" height="14" viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg>
+        <svg class="star" width="14" height="14" viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg>
       </div>
-      <div class="social-label" style="margin-top:4px">
-        <span data-i18n="social.very_pos">Very Positive</span><br>
-        <span data-i18n="social.reviews">87% Positive Reviews</span>
-      </div>
+      <span class="social-top" data-i18n="social.very_pos">Very Positive</span>
+      <span class="social-bot" data-i18n="social.reviews">87% Positive Reviews</span>
     </div>
   </div>
 
@@ -811,23 +838,23 @@ html.lang-ko .final-cta-sub,html.lang-ja .final-cta-sub{font-style:normal}
 
   <div class="social-item">
     <div class="social-num" data-i18n="social.free_num">Free</div>
-    <div class="social-label">
-      <span data-i18n="social.to_play">to Play</span><br>
-      <span data-i18n="social.no_card">No credit card</span>
+    <div class="social-text-group">
+      <span class="social-top" data-i18n="social.to_play">to Play</span>
+      <span class="social-bot" data-i18n="social.no_card">No credit card</span>
     </div>
   </div>
 
   <div class="social-divider" aria-hidden="true"></div>
 
   <div class="steam-badge">
-    <svg class="steam-icon" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-      <circle cx="9" cy="9" r="8" stroke="rgba(255,255,255,.7)" stroke-width="1.2"/>
-      <path d="M9 5a4 4 0 0 1 0 8" stroke="rgba(255,255,255,.7)" stroke-width="1.2" fill="none"/>
-      <circle cx="9" cy="9" r="2" fill="rgba(255,255,255,.7)"/>
+    <svg class="steam-icon" width="22" height="22" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+      <circle cx="9" cy="9" r="8" stroke="rgba(255,255,255,.85)" stroke-width="1.2"/>
+      <path d="M9 5a4 4 0 0 1 0 8" stroke="rgba(255,255,255,.85)" stroke-width="1.2" fill="none"/>
+      <circle cx="9" cy="9" r="2" fill="rgba(255,255,255,.85)"/>
     </svg>
-    <div>
-      <div class="steam-logo" data-i18n="social.available">Available on Steam</div>
-      <div class="steam-status" data-i18n="social.now">Play Now — PC</div>
+    <div class="social-text-group">
+      <span class="social-top" data-i18n="social.available">Available on Steam</span>
+      <span class="social-bot" data-i18n="social.now">Play Now — PC</span>
     </div>
   </div>
 
@@ -1505,7 +1532,7 @@ html.lang-ko .final-cta-sub,html.lang-ja .final-cta-sub{font-style:normal}
     <div class="rv d3">
       <a href="#" class="cta" id="final-cta-btn" aria-label="Play Where Winds Meet for free">
         <span class="cta-inner">
-          <svg class="cta-icon" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <svg class="cta-icon" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
             <path d="M9 2L10.5 7H16L11.5 10.5L13 15.5L9 12L5 15.5L6.5 10.5L2 7H7.5Z" fill="currentColor" opacity=".8"/>
           </svg>
           <span data-i18n="fcta.cta">Enter the Jianghu — Free</span>
@@ -1519,8 +1546,9 @@ html.lang-ko .final-cta-sub,html.lang-ja .final-cta-sub{font-style:normal}
 </section>
 
 
+</main>
 <footer>
-  <img id="footer-logo" src="" alt="Where Winds Meet"
+  <img id="footer-logo" src="" alt=""
     style="height:clamp(56px,7vw,80px);width:auto;display:none;object-fit:contain;filter:brightness(0) invert(1);opacity:.65;margin:0 auto 24px;display:block" id="footer-logo-fix">
   <p class="footer-seal" aria-hidden="true">風 · 俠 · 道</p>
   <p class="footer-note" data-i18n="footer.note">Unofficial promotional page. Not affiliated with the official developer or publisher. Steam® is a trademark of Valve Corporation. All game assets belong to their respective owners.</p>
@@ -1752,7 +1780,9 @@ function setLang(l,push){
     var k=el.dataset.i18n;
     var v=T[l][k];
     if(v===undefined)return;
-    if(k.indexOf('rev.q')===0){
+    var htmlKeys=['fcta.h','fcta.sub'];
+    var isHtml=htmlKeys.indexOf(k)>=0||k.indexOf('rev.q')===0||v.indexOf('<br')>=0||v.indexOf('<b>')>=0;
+    if(isHtml){
       el.innerHTML=v;
     } else {
       el.textContent=v;
