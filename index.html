@@ -1,13 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Where Winds Meet — Enter Jianghu</title>
-<meta name="description" content="An epic open-world wuxia action RPG set in ancient China. Master the blade. Shape your destiny.">
+<meta property="og:type" content="website">
+  <meta property="og:title" content="Where Winds Meet — Enter Jianghu">
+  <meta property="og:description" content="An ancient world is watching. Free to play open-world wuxia RPG. 104K+ Steam reviews — Very Positive.">
+  <meta property="og:image" content="assets/images/hero_poster.webp">
+  <meta property="og:image:width" content="1920">
+  <meta property="og:image:height" content="1080">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Where Winds Meet — Enter Jianghu">
+  <meta name="twitter:description" content="Free to play. The Jianghu asks only one thing: that you enter.">
+  <meta name="twitter:image" content="assets/images/hero_poster.webp">
+  <meta name="description" content="An epic open-world wuxia action RPG set in ancient China. Master the blade. Shape your destiny.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Serif+SC:wght@300;400;700&family=Noto+Serif+KR:wght@300;400;700&family=Noto+Serif+JP:wght@300;400;700&display=swap" rel="stylesheet">
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Serif+SC:wght@300;400;700&family=Noto+Serif+KR:wght@300;400;700&family=Noto+Serif+JP:wght@300;400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Serif+SC:wght@300;400;700&family=Noto+Serif+KR:wght@300;400;700&family=Noto+Serif+JP:wght@300;400;700&display=swap" rel="stylesheet"></noscript>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -1154,7 +1165,17 @@ html.lang-ko .reviews-steam-link,html.lang-ja .reviews-steam-link{letter-spacing
   background:rgba(200,148,58,.08)
 }
 
+
+/* content-visibility for off-screen sections */
+.paths-section,.gallery-section,.trailer-section,
+.reviews-section,.sysreq-section,.faq-section{
+  content-visibility:auto;
+  contain-intrinsic-size:0 600px
+}
+
 </style>
+  <!-- Preload LCP image -->
+  <link rel="preload" as="image" href="assets/images/hero_poster.webp" fetchpriority="high">
 </head>
 <body>
 
@@ -1164,7 +1185,7 @@ html.lang-ko .reviews-steam-link,html.lang-ja .reviews-steam-link{letter-spacing
 <!-- NAV -->
 <nav class="nav" id="nav">
   <div class="nav-id">
-    <img id="nav-logo" alt="Where Winds Meet">
+    <img id="nav-logo" alt="Where Winds Meet logo">
     <span id="nav-word">WHERE WINDS MEET</span>
   </div>
   <div class="lang-row" role="group" aria-label="Language selector">
@@ -1187,7 +1208,7 @@ html.lang-ko .reviews-steam-link,html.lang-ja .reviews-steam-link{letter-spacing
     <div class="hw-mist"></div>
     <div class="hw-mist2"></div>
     <img class="hero-poster" id="hero-poster" alt="">
-    <video class="hero-video" id="hero-video" src="assets/videos/hero.mp4" autoplay playsinline poster="assets/images/hero_poster.webp">
+    <video class="hero-video" id="hero-video" src="assets/videos/hero.mp4" autoplay playsinline poster="assets/images/hero_poster.webp" preload="auto">
     </video>
   </div>
   <div class="hero-vtext-l" aria-hidden="true">武俠</div>
@@ -1259,12 +1280,12 @@ html.lang-ko .reviews-steam-link,html.lang-ja .reviews-steam-link{letter-spacing
       <span style="font-family:var(--ff-en);font-size:.55rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.7);text-shadow:0 1px 6px rgba(0,0,0,1)" data-i18n="social.steam_hero">Available Free on Steam</span>
     </div>
     <p class="hero-note rv d3" data-i18n="hero.note">Free to play. The Jianghu asks only one thing: that you enter.</p>
-    <div class="chips rv d4" aria-label="Game features">
-      <span class="chip" data-i18n="chip1">Open World</span>
-      <span class="chip" data-i18n="chip2">Martial Arts</span>
-      <span class="chip" data-i18n="chip3">Co-op</span>
-      <span class="chip" data-i18n="chip4">Ancient China</span>
-      <span class="chip" data-i18n="chip5">Wuxia RPG</span>
+    <div class="chips rv d4" role="list" aria-label="Game features">
+      <span class="chip" role="listitem" data-i18n="chip1">Open World</span>
+      <span class="chip" role="listitem" data-i18n="chip2">Martial Arts</span>
+      <span class="chip" role="listitem" data-i18n="chip3">Co-op</span>
+      <span class="chip" role="listitem" data-i18n="chip4">Ancient China</span>
+      <span class="chip" role="listitem" data-i18n="chip5">Wuxia RPG</span>
     </div>
   </div>
   <div class="hero-baseline" aria-hidden="true"></div>
@@ -1286,7 +1307,7 @@ html.lang-ko .reviews-steam-link,html.lang-ja .reviews-steam-link{letter-spacing
 
   <div class="social-item">
     <div>
-      <div class="stars" aria-label="Very Positive rating">
+      <div class="stars" role="img" aria-label="5 stars — Very Positive rating">
         <svg class="star" viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg>
         <svg class="star" viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg>
         <svg class="star" viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg>
@@ -1385,7 +1406,7 @@ html.lang-ko .reviews-steam-link,html.lang-ja .reviews-steam-link{letter-spacing
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2L10 7L5 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
     </div>
-    <div class="weapons-track" id="weapons-track" role="list">
+    <div class="weapons-track" id="weapons-track" role="list" aria-label="Weapon carousel">
 
       <div class="w-card rv active" style="--rot:-12deg" role="listitem" data-idx="0">
         <div class="w-card-inner">
