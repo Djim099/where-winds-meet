@@ -1,0 +1,2666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Where Winds Meet — Enter Jianghu</title>
+<meta name="description" content="An epic open-world wuxia action RPG set in ancient China. Master the blade. Shape your destiny.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Serif+SC:wght@300;400;700&family=Noto+Serif+KR:wght@300;400;700&family=Noto+Serif+JP:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --void:#100c06;
+  --deep:#07050300;
+  --ember:#f5b830;
+  --ember-hi:#ffe880;
+  --ember-lo:#c08830;
+  --blood:#8b1414;
+  --text:#faf0d8;
+  --text-soft:#d4aa78;
+  --paper:#f0dea8;
+  --paper-dim:#c8a870;
+  --ff-en:'Cinzel',serif;
+  --ff-body:'Cormorant Garamond','Georgia',serif;
+  --ff-ko:'Noto Serif KR',serif;
+  --ff-ja:'Noto Serif JP',serif;
+  --ff-cn:'Noto Serif SC',serif;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+html{background:var(--void);scroll-behavior:smooth}
+body{font-family:var(--ff-body);color:var(--text);background:#0e0a05;overflow-x:hidden;line-height:1.6;cursor:none}
+img{display:block;max-width:100%}
+button{cursor:none;border:none;background:none;font-family:inherit}
+a{color:inherit;text-decoration:none;cursor:none}
+
+/* CUSTOM CURSOR */
+#cursor{position:fixed;z-index:9999;pointer-events:none;width:10px;height:10px;border-radius:50%;background:var(--ember-hi);box-shadow:0 0 10px var(--ember),0 0 20px rgba(200,148,58,.4);transform:translate(-50%,-50%);transition:width .2s,height .2s}
+#cursor-ring{position:fixed;z-index:9998;pointer-events:none;width:30px;height:30px;border-radius:50%;border:1px solid rgba(200,148,58,.3);transform:translate(-50%,-50%)}
+
+/* CJK */
+html.lang-ko h1,html.lang-ko h2,html.lang-ko .card-name,html.lang-ko .lb,
+html.lang-ko .cta,html.lang-ko .chip,html.lang-ko .paths-label,html.lang-ko .sticky-btn,
+html.lang-ko .section-tag{font-family:var(--ff-ko);letter-spacing:.04em;text-transform:none}
+html.lang-ja h1,html.lang-ja h2,html.lang-ja .card-name,html.lang-ja .lb,
+html.lang-ja .cta,html.lang-ja .chip,html.lang-ja .paths-label,html.lang-ja .sticky-btn,
+html.lang-ja .section-tag{font-family:var(--ff-ja);letter-spacing:.04em;text-transform:none}
+
+/* GRAIN */
+body::after{content:'';position:fixed;inset:0;z-index:50;pointer-events:none;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23n)'/%3E%3C/svg%3E");background-size:250px}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:2px}
+::-webkit-scrollbar-track{background:var(--void)}
+::-webkit-scrollbar-thumb{background:var(--ember-lo)}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:20px 48px;display:flex;justify-content:space-between;align-items:center;transition:all .5s ease;background:linear-gradient(180deg,rgba(14,10,5,.75),transparent)}
+.nav.solid{background:rgba(14,10,5,.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(200,148,58,.2);padding:14px 48px}
+@media(max-width:600px){.nav{padding:14px 20px}.nav.solid{padding:12px 20px}}
+.nav-id{font-family:var(--ff-en);font-size:.6rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:#fff;opacity:1;text-shadow:0 0 12px rgba(245,184,48,.4),0 1px 8px rgba(0,0,0,.8)}
+.nav-id img{height:30px;width:auto;display:none}
+.lang-row{display:flex;gap:2px;background:rgba(4,2,1,.55);border:1px solid rgba(200,148,58,.22);padding:3px;backdrop-filter:blur(8px)}
+.lb{font-family:var(--ff-en);font-size:.58rem;font-weight:700;letter-spacing:.18em;color:rgba(220,190,140,.75);padding:6px 14px;border:none;background:transparent;transition:all .25s}
+.lb:hover{color:#fff;background:rgba(200,148,58,.15)}
+.lb.on{color:var(--void);background:linear-gradient(135deg,var(--ember-hi),var(--ember));letter-spacing:.2em}
+.lb:focus-visible{outline:2px solid var(--ember-hi);outline-offset:2px}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(22px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.rv.show{opacity:1;transform:none}
+.d1{transition-delay:.12s}.d2{transition-delay:.24s}.d3{transition-delay:.36s}
+.d4{transition-delay:.48s}.d5{transition-delay:.6s}
+
+/* ═══════════════════════════
+   HERO
+═══════════════════════════ */
+.hero{position:relative;width:100%;min-height:min(100vh,820px);height:min(100vh,820px);display:flex;align-items:flex-start;overflow:hidden}
+
+/* CSS-built world background */
+.hero-world{position:absolute;inset:0;z-index:0}
+.hw-sky{position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 68% 22%,#4a2e0a 0%,#261408 38%,#160e06 65%,#100c06 100%)}
+.hw-sun{position:absolute;width:200px;height:200px;right:14%;top:8%;border-radius:50%;background:radial-gradient(circle,#c8943a 0%,#7a4a10 35%,transparent 70%);opacity:.24;filter:blur(16px)}
+.hw-m1{position:absolute;left:0;right:0;bottom:0;height:72%;background:linear-gradient(180deg,transparent 0%,#0e0906 60%,#0c0704 100%);clip-path:polygon(0 75%,3% 60%,8% 65%,12% 48%,17% 55%,22% 38%,27% 45%,31% 28%,36% 35%,40% 20%,44% 28%,49% 12%,53% 20%,57% 8%,60% 16%,64% 5%,67% 14%,71% 2%,74% 10%,78% 6%,82% 18%,86% 12%,90% 25%,94% 15%,97% 30%,100% 22%,100% 100%,0 100%)}
+.hw-m2{position:absolute;left:0;right:0;bottom:0;height:55%;background:linear-gradient(180deg,transparent 0%,#100b07 50%,#0e0805 100%);clip-path:polygon(0 82%,5% 65%,10% 72%,14% 52%,20% 60%,25% 42%,30% 52%,35% 32%,39% 42%,44% 22%,48% 35%,53% 18%,58% 30%,62% 15%,66% 28%,70% 12%,74% 24%,79% 10%,83% 20%,87% 8%,91% 18%,95% 5%,98% 16%,100% 10%,100% 100%,0 100%)}
+.hw-m3{position:absolute;left:0;right:0;bottom:0;height:38%;background:linear-gradient(180deg,transparent 0%,#130d08 40%,#100a06 100%);clip-path:polygon(0 88%,4% 70%,9% 78%,15% 58%,20% 68%,26% 48%,31% 60%,36% 40%,41% 52%,46% 30%,51% 45%,56% 28%,61% 42%,66% 22%,71% 36%,76% 18%,81% 32%,86% 14%,91% 28%,95% 12%,98% 22%,100% 16%,100% 100%,0 100%)}
+.hw-m4{position:absolute;left:0;right:0;bottom:0;height:22%;background:linear-gradient(180deg,transparent 0%,#261808 35%,#1e1208 100%);clip-path:polygon(0 90%,6% 75%,13% 82%,20% 62%,28% 72%,35% 50%,43% 65%,50% 42%,57% 58%,64% 38%,71% 55%,78% 34%,85% 50%,91% 30%,96% 44%,100% 28%,100% 100%,0 100%)}
+.hw-m5{position:absolute;left:0;right:0;bottom:0;height:12%;background:#281808;clip-path:polygon(0 95%,8% 72%,16% 85%,24% 60%,32% 78%,40% 52%,48% 70%,56% 44%,64% 65%,72% 38%,80% 58%,88% 32%,94% 50%,100% 36%,100% 100%,0 100%)}
+.hw-mist{position:absolute;left:0;right:0;bottom:8%;height:28%;background:linear-gradient(180deg,transparent,rgba(180,140,90,.04) 40%,rgba(160,120,70,.06) 70%,transparent);animation:mist 22s ease-in-out infinite alternate}
+.hw-mist2{position:absolute;left:-20%;right:-20%;bottom:18%;height:18%;background:linear-gradient(180deg,transparent,rgba(180,140,90,.03) 50%,transparent);animation:mist 30s ease-in-out infinite alternate-reverse;animation-delay:-10s}
+@keyframes mist{from{transform:translateX(0)}to{transform:translateX(8%)}}
+
+.hero-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;display:none}.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;opacity:0;transition:opacity 1.4s ease}
+.hero-veil{display:none}
+.embers{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
+.em{position:absolute;border-radius:50%;background:radial-gradient(circle,var(--ember-hi),transparent);animation:rise var(--d,9s) var(--dl,0s) infinite ease-out}
+@keyframes rise{0%{opacity:0;transform:translate(0,0)}8%{opacity:var(--op,.2)}90%{opacity:var(--op,.2)}100%{opacity:0;transform:translate(var(--dx,10px),calc(-60vh))}}
+.hero-vtext-l,.hero-vtext-r{position:absolute;z-index:3;top:50%;transform:translateY(-50%);writing-mode:vertical-rl;text-orientation:upright;font-family:var(--ff-cn);font-weight:700;font-size:clamp(5rem,10vw,9rem);color:var(--ember);opacity:.03;pointer-events:none;user-select:none}
+.hero-vtext-l{left:1%}
+.hero-vtext-r{right:1%}
+
+.hero-content{position:relative;z-index:4;pointer-events:auto;max-width:1280px;width:100%;margin:0 auto;padding:clamp(90px,12vh,140px) 56px 60px}
+/* hero mobile padding handled in main mobile block */
+
+.hero-eyebrow{display:inline-flex;align-items:center;gap:14px;font-family:var(--ff-body);font-size:.88rem;font-style:italic;font-weight:400;letter-spacing:.05em;text-transform:none;color:#ffe88a;margin-bottom:1rem;background:rgba(28,18,8,.75);padding:6px 16px 6px 0}
+.hero-eyebrow::before{content:'';width:38px;height:1px;background:var(--ember);opacity:.8}
+h1.hero-hl{font-family:var(--ff-en);font-weight:900;font-size:clamp(2.4rem,6.5vw,5.8rem);line-height:.97;letter-spacing:-.01em;color:#ffffff;text-shadow:0 2px 12px rgba(0,0,0,1),0 4px 40px rgba(0,0,0,1),0 0 80px rgba(0,0,0,.9);margin-bottom:1rem}
+html.lang-ko h1.hero-hl,html.lang-ja h1.hero-hl{font-size:clamp(2.5rem,7vw,6.5rem);line-height:1.1}
+.hero-hl-stroke{display:block;color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,.85);font-size:.68em;margin-top:.05em}
+.hero-sub{max-width:480px;font-size:clamp(1rem,1.8vw,1.18rem);font-weight:400;font-style:italic;color:#fff;line-height:1.85;margin-bottom:2.4rem;background:rgba(28,18,8,.75);padding:16px 20px;border-left:2px solid rgba(200,148,58,.45)}
+html.lang-ko .hero-sub,html.lang-ja .hero-sub{font-style:normal;font-size:clamp(.92rem,1.5vw,1.08rem)}
+
+.hero-acts{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-bottom:2rem}
+.cta{
+  display:inline-flex;align-items:center;gap:14px;
+  font-family:var(--ff-en);font-size:.72rem;font-weight:700;
+  letter-spacing:.22em;text-transform:uppercase;
+  color:#0a0700;
+  background:linear-gradient(108deg,#ffe080 0%,var(--ember-hi) 35%,var(--ember) 65%,#8a5a18 100%);
+  padding:18px 48px 18px 40px;
+  position:relative;overflow:hidden;
+  box-shadow:0 0 0 1px rgba(240,192,96,.4),0 4px 24px rgba(200,148,58,.25),inset 0 1px 0 rgba(255,255,255,.3);
+  animation:cta-pulse 2.8s ease-in-out infinite;
+  transition:transform .35s ease,box-shadow .35s ease
+}
+.cta::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.28) 50%,transparent 70%);
+  transform:translateX(-130%);transition:transform .7s ease
+}
+.cta::after{
+  content:'';position:absolute;bottom:0;left:10%;right:10%;height:1px;
+  background:rgba(255,255,255,.35)
+}
+.cta:hover::before{transform:translateX(130%)}
+.cta:hover{
+  transform:translateY(-4px);
+  box-shadow:0 0 0 1px rgba(255,224,128,.7),0 8px 40px rgba(200,148,58,.5),0 2px 0 rgba(255,255,255,.15),inset 0 1px 0 rgba(255,255,255,.35)
+}
+.cta:focus-visible{outline:2px solid var(--ember-hi);outline-offset:4px}
+.cta svg{flex-shrink:0;transition:transform .35s ease}
+.cta:hover svg{transform:translateX(5px)}
+
+.hero-note{font-size:.82rem;font-style:italic;color:#f0dfa8;margin-bottom:2rem;font-family:var(--ff-body);letter-spacing:.03em;background:rgba(28,18,8,.72);padding:5px 16px;display:inline-block}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font-family:var(--ff-en);font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:#fff;border:1px solid rgba(255,224,100,.45);padding:5px 14px;transition:all .25s;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);text-shadow:0 1px 4px rgba(0,0,0,.9)}
+.chip:hover{border-color:rgba(200,148,58,.38);color:var(--paper)}
+.hero-baseline{position:absolute;bottom:0;left:0;right:0;height:1px;z-index:4;background:linear-gradient(90deg,transparent,var(--ember-lo),var(--ember),var(--ember-lo),transparent);opacity:.3}
+
+/* ═══════════════════════════
+   WORLD SECTION
+═══════════════════════════ */
+.world-section{position:relative;overflow:hidden}
+.world-art{width:100%;height:clamp(480px,60vw,780px);position:relative;overflow:hidden}
+.world-art-bg{
+  position:absolute;inset:0;
+  background-image:url("assets/images/screenshot_5.webp");
+  background-size:cover;
+  background-position:center 40%;
+  background-repeat:no-repeat
+}
+/* world-art-bg::after removed */
+.world-art-svg{display:none}
+.world-mist{display:none}
+.world-veil{position:absolute;inset:0;z-index:3;background:linear-gradient(180deg,rgba(6,3,1,.35) 0%,rgba(6,3,1,.05) 20%,rgba(6,3,1,.05) 65%,rgba(6,3,1,.75) 100%);display:flex;align-items:center;justify-content:center;padding:48px 24px}
+.world-center{text-align:center;max-width:860px;z-index:3;position:relative;background:rgba(6,3,1,.45);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);padding:44px 48px;border:1px solid rgba(200,148,58,.15)}
+.section-tag{font-family:var(--ff-en);font-size:.54rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:#ffffff;margin-bottom:1.2rem;display:flex;align-items:center;justify-content:center;gap:16px;text-shadow:0 0 16px rgba(245,184,48,.7),0 1px 4px rgba(0,0,0,.9)}
+.section-tag::before,.section-tag::after{content:'';width:28px;height:1px;background:var(--ember);opacity:.65}
+h2.sect-hl{font-family:var(--ff-en);font-weight:900;font-size:clamp(1.8rem,4.2vw,3.8rem);line-height:1.05;color:#ffffff;text-shadow:0 2px 30px rgba(0,0,0,1),0 0 60px rgba(0,0,0,.95),0 4px 16px rgba(0,0,0,1);margin-bottom:1.4rem}
+html.lang-ko h2.sect-hl,html.lang-ja h2.sect-hl{font-size:clamp(1.5rem,3.5vw,3rem)}
+.world-desc{font-size:clamp(1.05rem,1.8vw,1.3rem);font-weight:400;font-style:italic;color:#fff;line-height:1.9;margin-bottom:2.8rem;text-shadow:0 2px 24px rgba(0,0,0,1),0 1px 8px rgba(0,0,0,1),0 0 40px rgba(0,0,0,.9)}
+html.lang-ko .world-desc,html.lang-ja .world-desc{font-style:normal;font-size:clamp(.92rem,1.4vw,1.08rem)}
+.pillars{display:flex;justify-content:center;flex-wrap:wrap;gap:2px}
+.pillar{padding:9px 20px;border:1px solid rgba(255,224,100,.3);font-family:var(--ff-en);font-size:.54rem;letter-spacing:.2em;text-transform:uppercase;color:#fff;transition:all .3s}
+html.lang-ko .pillar,html.lang-ja .pillar{letter-spacing:.04em;text-transform:none}
+.pillar:hover{border-color:rgba(200,148,58,.38);color:var(--paper);background:rgba(200,148,58,.04)}
+
+/* ═══════════════════════════
+   PATHS — HANGING SCROLLS
+═══════════════════════════ */
+.paths-section{position:relative;padding:100px 0 130px;overflow:hidden;background:linear-gradient(180deg,#160f08,#1a1208 30%,#1e1408 50%,#1a1208 70%,#160f08)}
+.paths-bg-glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 90% 60% at 50% 50%,rgba(200,148,58,.06) 0%,transparent 65%)}
+.paths-ghost{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--ff-cn);font-weight:700;font-size:clamp(18rem,40vw,50rem);color:var(--ember);opacity:.016;pointer-events:none;user-select:none;line-height:1}
+.paths-header{text-align:center;padding:0 24px 60px;position:relative;z-index:1}
+.paths-label{font-family:var(--ff-en);font-size:.54rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:#fff;margin-bottom:1.2rem;display:flex;align-items:center;justify-content:center;gap:16px;text-shadow:0 0 16px rgba(245,184,48,.7),0 1px 4px rgba(0,0,0,.9)}
+.paths-label::before,.paths-label::after{content:'';width:28px;height:1px;background:var(--ember);opacity:.65}
+
+/* Rod */
+.rod-wrap{position:relative;z-index:1;display:flex;justify-content:center;margin-bottom:0}
+.rod{width:min(92%,1160px);height:8px;background:linear-gradient(90deg,transparent,var(--ember-lo) 8%,#b07828 20%,var(--ember) 50%,#b07828 80%,var(--ember-lo) 92%,transparent);border-radius:4px;box-shadow:0 0 20px rgba(200,148,58,.15),0 2px 8px rgba(0,0,0,.5);position:relative}
+.rod::before,.rod::after{content:'';position:absolute;top:50%;transform:translateY(-50%);width:14px;height:14px;border-radius:50%;background:radial-gradient(circle,var(--ember-hi),var(--ember-lo));box-shadow:0 0 10px rgba(200,148,58,.3)}
+.rod::before{left:-5px}
+.rod::after{right:-5px}
+
+/* Strings */
+.strings{position:relative;z-index:1;display:flex;justify-content:center;pointer-events:none;overflow:hidden}
+.string-line{flex:1;max-width:calc(min(92%,1160px)/5);height:28px;border-right:1px solid rgba(200,148,58,.18)}
+.string-line:first-child{border-left:1px solid rgba(200,148,58,.18)}
+
+/* Scrolls */
+.scrolls{display:flex;justify-content:center;gap:8px;padding:0 max(4%,(100% - 1160px)/2);position:relative;z-index:1}
+.scroll{flex:1;min-width:0;max-width:232px;position:relative;transform-origin:top center;animation:sway var(--sw,6s) var(--sd,0s) ease-in-out infinite alternate}
+@keyframes sway{from{transform:rotate(var(--s1,-.4deg))}to{transform:rotate(var(--s2,.4deg))}}
+.scroll:hover{animation-play-state:paused;transform:scale(1.04) translateY(-10px) !important;transition:transform .4s var(--ease)}
+.scroll-top,.scroll-bot{height:16px;border-radius:3px;position:relative;z-index:2;box-shadow:0 2px 12px rgba(0,0,0,.5)}
+.scroll-top{background:linear-gradient(180deg,var(--ember-hi),var(--ember),#c0801a)}
+.scroll-bot{background:linear-gradient(0deg,var(--ember-hi),var(--ember),var(--ember-lo))}
+.scroll-body{padding:28px 18px 24px;background:linear-gradient(180deg,rgba(200,148,58,.12),rgba(200,100,30,.08),rgba(200,148,58,.12)),#1c1509;border-left:1px solid rgba(200,148,58,.09);border-right:1px solid rgba(200,148,58,.09);text-align:center;min-height:270px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;position:relative;overflow:hidden;transition:background .4s}
+.scroll:hover .scroll-body{background:linear-gradient(180deg,rgba(200,148,58,.1),rgba(200,148,58,.06),rgba(200,148,58,.1)),#0c0a06}
+.scroll-body::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,rgba(200,148,58,.08),transparent 65%);opacity:0;transition:opacity .4s}
+.scroll:hover .scroll-body::before{opacity:1}
+.scroll-num{font-family:var(--ff-cn);font-size:2.2rem;font-weight:700;color:var(--ember-hi);opacity:.45;line-height:1;position:absolute;top:10px;right:12px}
+.scroll-icon{width:36px;height:36px;opacity:.58}
+.scroll-div{width:55%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,220,80,.7),transparent)}
+.card-name{font-family:var(--ff-en);font-size:.82rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#fff;line-height:1.3;text-shadow:0 1px 6px rgba(0,0,0,.7)}
+.card-desc{font-size:.86rem;font-style:italic;color:#f0dea8;line-height:1.75}
+html.lang-ko .card-desc,html.lang-ja .card-desc{font-style:normal;font-size:.82rem}
+.scroll-tassel{display:flex;justify-content:center;gap:7px;padding:4px 0 0}
+.tsl{width:1px;height:20px;background:linear-gradient(180deg,rgba(200,148,58,.38),transparent)}
+
+@media(max-width:900px){
+  .scrolls{flex-wrap:wrap;padding:0 5%}
+  .scroll{flex:0 0 calc(50% - 20px);max-width:none;min-width:140px}
+  .strings,.rod-wrap{display:none}
+}
+@media(max-width:480px){.scroll{flex:0 0 100%}}
+
+/* ═══════════════════════════
+   GALLERY
+═══════════════════════════ */
+.gallery-section{position:relative;padding:90px 0 110px;background:linear-gradient(180deg,#160e07,#1c1309 30%,#201508 50%,#1c1309 70%,#160e07);overflow:hidden}
+.gallery-header{text-align:center;padding:0 24px 56px}
+/* 5-image cinematic mosaic */
+.gallery-grid{max-width:1400px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1.6fr 1fr 1fr;grid-template-rows:auto auto;gap:6px}
+@media(max-width:900px){.gallery-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto auto auto}}
+@media(max-width:540px){.gallery-grid{grid-template-columns:1fr}}
+.g-frame{position:relative;overflow:hidden;background:#080604;border:1px solid rgba(232,168,58,.18);transition:border-color .5s,box-shadow .5s}
+.g-frame:hover{border-color:rgba(200,148,58,.32);box-shadow:0 0 40px rgba(200,148,58,.08)}
+/* slot 1 — tall hero left, spans 2 rows */
+.g-frame:nth-child(1){grid-column:1;grid-row:1/3;aspect-ratio:unset;min-height:560px}
+@media(max-width:900px){.g-frame:nth-child(1){grid-column:span 2;aspect-ratio:16/9;min-height:unset}}
+@media(max-width:540px){.g-frame:nth-child(1){grid-column:1;aspect-ratio:16/9}}
+/* slots 2+3 top-right */
+.g-frame:nth-child(2){grid-column:2;grid-row:1;aspect-ratio:16/9}
+.g-frame:nth-child(3){grid-column:3;grid-row:1;aspect-ratio:16/9}
+@media(max-width:900px){.g-frame:nth-child(2){grid-column:1;grid-row:2;aspect-ratio:16/9}.g-frame:nth-child(3){grid-column:2;grid-row:2;aspect-ratio:16/9}}
+@media(max-width:540px){.g-frame:nth-child(2),.g-frame:nth-child(3){grid-column:1;aspect-ratio:16/9}}
+/* slots 4+5 bottom-right */
+.g-frame:nth-child(4){grid-column:2;grid-row:2;aspect-ratio:16/9}
+.g-frame:nth-child(5){grid-column:3;grid-row:2;aspect-ratio:16/9}
+@media(max-width:900px){.g-frame:nth-child(4){grid-column:1;grid-row:3}.g-frame:nth-child(5){grid-column:2;grid-row:3}}
+@media(max-width:540px){.g-frame:nth-child(4),.g-frame:nth-child(5){grid-column:1;aspect-ratio:16/9}}
+.g-ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.g-ph-1{background:linear-gradient(135deg,#2e1e0a,#3e2612,#241408)}
+.g-ph-2{background:linear-gradient(225deg,#221608,#2c1c0a,#1a1208)}
+.g-ph-3{background:linear-gradient(160deg,#28180a,#36240e,#1e1408)}
+.g-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:transform .7s ease}
+.g-frame:hover .g-img{transform:scale(1.06)}
+.g-overlay{position:absolute;bottom:0;left:0;right:0;z-index:4;padding:22px 20px 18px;background:linear-gradient(0deg,rgba(4,2,1,.92) 0%,rgba(4,2,1,.4) 60%,transparent 100%);font-family:var(--ff-en);font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;color:#ffe880;opacity:0;transition:opacity .4s ease;text-shadow:0 0 10px rgba(245,184,48,.5);display:flex;align-items:flex-end;gap:10px}
+.g-overlay::before{content:'';width:20px;height:1px;background:var(--ember);flex-shrink:0;opacity:.6;margin-bottom:3px}
+html.lang-ko .g-overlay,html.lang-ja .g-overlay{letter-spacing:.04em;text-transform:none}
+.g-frame:hover .g-overlay{opacity:1}
+/* vignette inner shadow on hover */
+.g-frame::after{content:'';position:absolute;inset:0;z-index:3;box-shadow:inset 0 0 60px rgba(0,0,0,.5);opacity:0;transition:opacity .4s ease;pointer-events:none}
+.g-frame:hover::after{opacity:1}
+/* gold corner ticks */
+.g-frame::before{content:'';position:absolute;inset:10px;z-index:5;border:1px solid rgba(200,148,58,.0);transition:border-color .4s ease;pointer-events:none}
+.g-frame:hover::before{border-color:rgba(200,148,58,.18)}
+/* Ambient glow line at top on hover */
+.g-frame .g-top-line{position:absolute;top:0;left:0;right:0;height:2px;z-index:5;background:linear-gradient(90deg,transparent,var(--ember),transparent);opacity:0;transition:opacity .4s ease}
+.g-frame:hover .g-top-line{opacity:.6}
+
+/* ═══════════════════════════
+   TRAILER
+═══════════════════════════ */
+.trailer-section{position:relative;padding:100px 24px;overflow:hidden;background:linear-gradient(180deg,#160e07,#1c1208 35%,#201508 55%,#1c1208 75%,#160e07)}
+.trailer-section::before,.trailer-section::after{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;border:1px solid rgba(200,148,58,.12);pointer-events:none}
+.trailer-section::before{width:min(90vw,820px);height:min(90vw,820px)}
+.trailer-section::after{width:min(65vw,600px);height:min(65vw,600px);border-color:rgba(200,148,58,.08)}
+.trailer-inner{max-width:900px;margin:0 auto;position:relative;z-index:1}
+.trailer-header{text-align:center;margin-bottom:48px}
+.t-sub{font-size:clamp(.95rem,1.6vw,1.15rem);font-style:italic;color:var(--paper);margin-top:.8rem}
+html.lang-ko .t-sub,html.lang-ja .t-sub{font-style:normal}
+.t-player{position:relative;aspect-ratio:16/9;border:1px solid rgba(232,168,58,.25);overflow:hidden;margin-bottom:40px;box-shadow:0 0 80px rgba(0,0,0,.8)}
+.t-ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#241809,#1c160a,#281c0a)}
+.t-ph svg{opacity:.08}
+.t-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
+.play-ring{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:5;width:78px;height:78px;border-radius:50%;background:rgba(200,148,58,.1);border:1px solid rgba(200,148,58,.45);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:background .35s,box-shadow .35s,opacity .3s;cursor:none}
+/* Hide pause button when playing — only show on hover */
+.t-player.is-playing .play-ring{opacity:0;pointer-events:none}
+.t-player.is-playing:hover .play-ring{opacity:1;pointer-events:auto}
+.play-ring::before{content:'';position:absolute;inset:-8px;border-radius:50%;border:1px solid rgba(200,148,58,.14);animation:pulse 3s ease-in-out infinite}
+.play-ring::after{content:'';position:absolute;inset:-18px;border-radius:50%;border:1px solid rgba(232,168,58,.18);animation:pulse 3s ease-in-out infinite .6s}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.07);opacity:.25}}
+@keyframes cta-pulse{0%,100%{box-shadow:0 0 0 1px rgba(240,192,96,.4),0 4px 24px rgba(200,148,58,.25),inset 0 1px 0 rgba(255,255,255,.3)}50%{box-shadow:0 0 0 2px rgba(255,220,80,.7),0 6px 36px rgba(200,148,58,.5),0 0 60px rgba(200,148,58,.15),inset 0 1px 0 rgba(255,255,255,.35)}}
+.play-ring:hover{background:rgba(200,148,58,.25);box-shadow:0 0 40px rgba(200,148,58,.25)}
+.play-ring:focus-visible{outline:2px solid var(--ember-hi);outline-offset:4px}
+.t-cta{text-align:center}
+
+/* ═══════════════════════════
+   FAQ
+═══════════════════════════ */
+.faq-section{padding:90px 24px;background:linear-gradient(180deg,#160e07,#1c1309 30%,#1e1408 55%,#1c1309 75%,#160e07)}
+.faq-inner{max-width:700px;margin:0 auto}
+.faq-header{text-align:center;margin-bottom:50px}
+.faq-list{list-style:none}
+.faq-item{border-bottom:1px solid rgba(200,148,58,.22);position:relative}
+.faq-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(180deg,transparent,var(--ember),transparent);opacity:0;transition:opacity .35s}
+.faq-item:has(.faq-q[aria-expanded="true"])::before{opacity:.38}
+.faq-q{width:100%;text-align:left;padding:20px 0 20px 16px;display:flex;justify-content:space-between;align-items:center;gap:18px;cursor:none;transition:color .2s}
+.faq-q:hover{color:var(--paper)}
+.faq-q:focus-visible{outline:1px solid var(--ember);outline-offset:3px}
+.faq-q-t{font-family:var(--ff-en);font-size:.86rem;font-weight:700;letter-spacing:.05em;color:#fff;transition:color .2s}
+.faq-q:hover .faq-q-t,.faq-q[aria-expanded="true"] .faq-q-t{color:var(--ember)}
+.faq-plus{flex-shrink:0;width:23px;height:23px;border:1px solid rgba(200,148,58,.24);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--ember);font-size:.85rem;transition:all .3s}
+.faq-q[aria-expanded="true"] .faq-plus{transform:rotate(45deg);background:rgba(200,148,58,.12);border-color:var(--ember)}
+.faq-a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s}
+.faq-a.open{grid-template-rows:1fr}
+.faq-a-in{overflow:hidden}
+.faq-a-t{padding:0 0 20px 16px;font-size:.93rem;font-style:italic;color:#f0dea8;line-height:1.8}
+html.lang-ko .faq-a-t,html.lang-ja .faq-a-t{font-style:normal;font-size:.88rem}
+
+/* ═══════════════════════════
+   FOOTER
+═══════════════════════════ */
+footer{padding:48px 24px 110px;text-align:center;border-top:1px solid rgba(200,148,58,.2);background:linear-gradient(180deg,#160e07,#1a1208)}
+.footer-seal{font-family:var(--ff-cn);font-size:1.1rem;color:var(--ember);opacity:.22;margin-bottom:16px;letter-spacing:.15em}
+.footer-note{font-size:.63rem;color:#d4b878;opacity:.7;line-height:1.9;max-width:560px;margin:0 auto 16px}
+.footer-links{display:flex;justify-content:center;gap:22px}
+.footer-link{font-size:.6rem;color:var(--text-soft);letter-spacing:.1em;opacity:.35;transition:opacity .2s,color .2s;cursor:none}
+.footer-link:hover{opacity:.75;color:var(--ember)}
+
+/* ═══════════════════════════
+   STICKY CTA
+═══════════════════════════ */
+.sticky{position:fixed;z-index:180;bottom:24px;right:24px;display:flex;align-items:center;gap:14px;background:rgba(18,13,6,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(200,148,58,.2);padding:13px 16px 13px 20px;transform:translateY(120px);opacity:0;pointer-events:none;transition:transform .55s var(--ease),opacity .45s;box-shadow:0 8px 40px rgba(0,0,0,.6)}
+.sticky.on{transform:translateY(0);opacity:1;pointer-events:auto}
+@media(max-width:560px){.sticky{left:12px;right:12px;bottom:12px;justify-content:space-between}}
+.sticky-label{font-family:var(--ff-en);font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:#fff}
+html.lang-ko .sticky-label,html.lang-ja .sticky-label{letter-spacing:.04em;text-transform:none}
+.sticky-btn{font-family:var(--ff-en);font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--void);background:linear-gradient(90deg,var(--ember-hi),var(--ember));padding:10px 20px;white-space:nowrap;transition:all .25s;display:inline-block}
+html.lang-ko .sticky-btn,html.lang-ja .sticky-btn{letter-spacing:.04em;text-transform:none}
+.sticky-btn:hover{background:var(--ember-hi);box-shadow:0 0 20px rgba(200,148,58,.3)}
+
+/* ═══════════════════════════
+   MODALS
+═══════════════════════════ */
+.mbg{position:fixed;inset:0;z-index:500;background:rgba(18,13,6,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .3s}
+.mbg.open{opacity:1;pointer-events:auto}
+.mbox{background:#1e1609;border:1px solid rgba(200,148,58,.18);max-width:520px;width:100%;padding:44px;position:relative;max-height:80vh;overflow-y:auto}
+.m-title{font-family:var(--ff-en);font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ember);margin-bottom:14px}
+.m-body{font-size:.88rem;color:var(--text-soft);line-height:1.85}
+.m-close{position:absolute;top:14px;right:16px;color:var(--text-soft);font-size:1rem;padding:8px;transition:color .2s;cursor:none}
+.m-close:hover{color:var(--ember)}
+.m-close:focus-visible{outline:1px solid var(--ember)}
+
+/* ═══════════════════════════
+   SYSTEM REQUIREMENTS
+═══════════════════════════ */
+.sysreq-section{
+  position:relative;padding:100px 24px 110px;
+  background:linear-gradient(180deg,#160e07,#1b1208 35%,#1f1408 55%,#1b1208 75%,#160e07);
+  overflow:hidden
+}
+/* Ghost kanji bg */
+.sysreq-ghost{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  font-family:var(--ff-cn);font-weight:700;
+  font-size:clamp(16rem,35vw,44rem);
+  color:var(--ember);opacity:.016;
+  pointer-events:none;user-select:none;line-height:1
+}
+.sysreq-inner{max-width:1100px;margin:0 auto;position:relative;z-index:1}
+.sysreq-header{text-align:center;margin-bottom:60px}
+
+/* Tier toggle */
+.tier-toggle{
+  display:flex;justify-content:center;gap:0;margin-bottom:52px
+}
+.tier-btn{
+  font-family:var(--ff-en);font-size:.62rem;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;
+  padding:13px 36px;border:1px solid rgba(200,148,58,.2);
+  color:#fff;background:transparent;
+  transition:all .3s ease;cursor:none;position:relative;overflow:hidden
+}
+html.lang-ko .tier-btn,html.lang-ja .tier-btn{letter-spacing:.05em;text-transform:none}
+.tier-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(200,148,58,.06),transparent);
+  transform:translateX(-110%);transition:transform .5s ease
+}
+.tier-btn:hover::before{transform:translateX(110%)}
+.tier-btn.active{
+  color:var(--void);
+  background:linear-gradient(108deg,var(--ember-hi),var(--ember),#9a6a20);
+  border-color:transparent
+}
+.tier-btn:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+
+/* Specs grid */
+.specs-panel{display:none}
+.specs-panel.active{display:block;animation:fadeSpec .4s ease}
+@keyframes fadeSpec{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+.specs-grid{
+  display:grid;grid-template-columns:1fr;gap:2px
+}
+@media(min-width:700px){.specs-grid{grid-template-columns:1fr 1fr;gap:6px}}
+
+.spec-row{
+  display:flex;align-items:flex-start;gap:18px;
+  padding:20px 24px;
+  background:rgba(200,148,58,.055);
+  border:1px solid rgba(232,168,58,.18);
+  position:relative;overflow:hidden;
+  transition:background .3s,border-color .3s
+}
+.spec-row:hover{background:rgba(200,148,58,.1);border-color:rgba(200,148,58,.38)}
+/* Left gold bar */
+.spec-row::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:linear-gradient(180deg,transparent,var(--ember),transparent);
+  opacity:0;transition:opacity .3s
+}
+.spec-row:hover::before{opacity:.5}
+/* Span full width on mobile last item */
+@media(min-width:700px){.spec-row.full{grid-column:span 2}}
+
+.spec-icon{
+  width:32px;height:32px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  opacity:.55;margin-top:2px
+}
+.spec-content{flex:1;min-width:0}
+.spec-label{
+  font-family:var(--ff-en);font-size:.52rem;font-weight:700;letter-spacing:.26em;text-transform:uppercase;
+  color:#ffe880;margin-bottom:6px;line-height:1;text-shadow:0 0 14px rgba(245,184,48,.5),0 1px 3px rgba(0,0,0,.8)
+}
+html.lang-ko .spec-label,html.lang-ja .spec-label{letter-spacing:.04em;text-transform:none}
+.spec-value{
+  font-family:var(--ff-body);font-size:1rem;font-weight:400;
+  color:#fff;line-height:1.5
+}
+.spec-note{
+  font-size:.78rem;font-style:italic;color:#eed898;margin-top:4px
+}
+html.lang-ko .spec-note,html.lang-ja .spec-note{font-style:normal}
+
+/* Bottom CTA nudge */
+.sysreq-footer{
+  text-align:center;margin-top:48px;
+  display:flex;flex-direction:column;align-items:center;gap:14px
+}
+.sysreq-note{
+  font-size:.75rem;font-style:italic;color:#f0dea8;
+  display:flex;align-items:center;gap:10px
+}
+.sysreq-note::before,.sysreq-note::after{content:'';width:20px;height:1px;background:var(--ember);opacity:.3}
+html.lang-ko .sysreq-note,html.lang-ja .sysreq-note{font-style:normal}
+
+/* ═══════════════════════════
+   WEAPONS ARSENAL SECTION
+═══════════════════════════ */
+.weapons-section{
+  position:relative;padding:100px 0 120px;
+  overflow:hidden;
+  background:linear-gradient(180deg,#160e07 0%,#1c1309 25%,#211508 50%,#1c1309 75%,#160e07 100%)
+}
+/* Dramatic ink-wash background texture */
+.weapons-bg{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 40%,rgba(200,148,58,.04) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 60% at 10% 50%,rgba(139,20,20,.06) 0%,transparent 55%),
+    radial-gradient(ellipse 40% 60% at 90% 50%,rgba(139,20,20,.06) 0%,transparent 55%)
+}
+/* Ghost Chinese character */
+.weapons-ghost{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  font-family:var(--ff-cn);font-weight:700;
+  font-size:clamp(20rem,45vw,60rem);
+  color:var(--ember);opacity:.014;
+  pointer-events:none;user-select:none;line-height:1
+}
+/* Top & bottom brush-stroke dividers */
+.weapons-stroke{
+  position:absolute;left:10%;right:10%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(200,148,58,.35) 25%,rgba(200,148,58,.55) 50%,rgba(200,148,58,.35) 75%,transparent)
+}
+.weapons-stroke.top{top:0}
+.weapons-stroke.bot{bottom:0}
+
+.weapons-header{text-align:center;padding:0 24px 64px;position:relative;z-index:1}
+
+/* ── Carousel track ── */
+.weapons-track-wrap{
+  position:relative;z-index:2;
+  overflow:hidden;
+  padding:20px 0 30px
+}
+.weapons-track{
+  display:flex;
+  gap:0;
+  transition:transform .55s cubic-bezier(.4,0,.2,1);
+  will-change:transform
+}
+/* Each weapon card */
+.w-card{
+  flex:0 0 calc(100% / 3);
+  padding:0 16px;
+  display:flex;flex-direction:column;align-items:center;
+  cursor:none;
+  position:relative
+}
+@media(max-width:900px){.w-card{flex:0 0 50%}}
+@media(max-width:540px){.w-card{flex:0 0 100%}}
+
+.w-card-inner{
+  width:100%;
+  border:1px solid rgba(200,148,58,.22);
+  background:linear-gradient(160deg,rgba(200,148,58,.09),rgba(200,148,58,.05),rgba(20,12,4,.5));
+  padding:32px 16px 24px;
+  display:flex;flex-direction:column;align-items:center;
+  position:relative;overflow:hidden;
+  transition:border-color .4s ease,background .4s ease,transform .4s ease;
+}
+.w-card-inner::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--ember),transparent);
+  opacity:0;transition:opacity .4s ease
+}
+.w-card-inner::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 60%,rgba(200,148,58,.06),transparent 65%);
+  opacity:0;transition:opacity .4s ease
+}
+.w-card.active .w-card-inner,
+.w-card:hover .w-card-inner{
+  border-color:rgba(200,148,58,.4);
+  background:linear-gradient(160deg,rgba(200,148,58,.08),rgba(200,148,58,.04),rgba(0,0,0,.2));
+  transform:translateY(-6px)
+}
+.w-card.active .w-card-inner::before,
+.w-card:hover .w-card-inner::before{opacity:1}
+.w-card.active .w-card-inner::after,
+.w-card:hover .w-card-inner::after{opacity:1}
+
+/* Weapon number */
+.w-num{
+  font-family:var(--ff-cn);font-size:1.8rem;font-weight:700;
+  color:var(--ember);opacity:.22;
+  position:absolute;top:10px;right:14px;line-height:1;
+  transition:opacity .4s
+}
+.w-card.active .w-num,.w-card:hover .w-num{opacity:.5}
+
+/* Weapon image — mix-blend-mode removes white bg */
+.w-img-wrap{
+  width:100%;height:clamp(140px,18vw,210px);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;margin-bottom:20px
+}
+.w-img{
+  max-width:92%;max-height:100%;
+  object-fit:contain;
+  mix-blend-mode:multiply;
+  filter:drop-shadow(0 4px 18px rgba(200,148,58,.18)) brightness(1.08) contrast(1.05);
+  transition:transform .5s ease,filter .4s ease;
+  transform:rotate(var(--rot,0deg));
+  pointer-events:none
+}
+.w-card.active .w-img,
+.w-card:hover .w-img{
+  transform:rotate(var(--rot,0deg)) scale(1.1) translateY(-4px);
+  filter:drop-shadow(0 8px 28px rgba(200,148,58,.35)) brightness(1.12) contrast(1.08)
+}
+
+/* Divider line */
+.w-line{
+  width:50%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(200,148,58,.5),transparent);
+  margin-bottom:16px
+}
+/* Name */
+.w-name{
+  font-family:var(--ff-en);font-size:.82rem;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:#fff;margin-bottom:8px;text-align:center;
+  transition:color .3s
+;text-shadow:0 1px 8px rgba(0,0,0,.85)}
+html.lang-ko .w-name,html.lang-ja .w-name{letter-spacing:.05em;text-transform:none}
+.w-card.active .w-name,.w-card:hover .w-name{color:var(--ember-hi)}
+/* Desc */
+.w-desc{
+  font-size:.82rem;font-style:italic;color:#f0dea8;
+  text-align:center;line-height:1.7;
+  transition:color .3s
+}
+html.lang-ko .w-desc,html.lang-ja .w-desc{font-style:normal;font-size:.78rem}
+.w-card.active .w-desc,.w-card:hover .w-desc{color:var(--paper)}
+
+/* ── Navigation dots ── */
+.weapons-dots{
+  display:flex;justify-content:center;gap:10px;
+  margin-top:40px;position:relative;z-index:2
+}
+.w-dot{
+  width:28px;height:2px;background:rgba(200,148,58,.25);
+  border:none;padding:0;cursor:none;
+  transition:background .3s,width .3s
+}
+.w-dot.on{background:var(--ember);width:44px}
+.w-dot:focus-visible{outline:1px solid var(--ember);outline-offset:3px}
+
+/* ── Prev / Next arrows ── */
+.weapons-arrows{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:100%;left:0;display:flex;justify-content:space-between;
+  padding:0 8px;pointer-events:none;z-index:3
+}
+.w-arrow{
+  pointer-events:auto;
+  width:44px;height:44px;border-radius:50%;
+  border:1px solid rgba(200,148,58,.28);
+  background:rgba(4,2,1,.75);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--ember);cursor:none;
+  transition:all .3s ease
+}
+.w-arrow:hover{border-color:var(--ember);background:rgba(200,148,58,.12);transform:scale(1.08)}
+.w-arrow:focus-visible{outline:1px solid var(--ember);outline-offset:2px}
+.divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(200,148,58,.3) 25%,rgba(200,148,58,.5) 50%,rgba(200,148,58,.3) 75%,transparent)}
+
+/* ═══════════════════════
+   SOCIAL PROOF STRIP
+═══════════════════════ */
+.social-strip{
+  position:relative;z-index:10;
+  background:linear-gradient(90deg,#0e0a05,#1a1208 30%,#1e1408 50%,#1a1208 70%,#0e0a05);
+  border-top:1px solid rgba(200,148,58,.25);
+  border-bottom:1px solid rgba(200,148,58,.25);
+  padding:18px 32px;
+  display:flex;
+  flex-direction:row;
+  flex-wrap:nowrap;
+  justify-content:center;
+  align-items:center;
+  gap:0 36px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch
+}
+
+.social-item{
+  display:flex;align-items:center;gap:10px;
+  white-space:nowrap
+}
+.social-divider{
+  width:1px;height:28px;
+  background:rgba(200,148,58,.22);
+  flex-shrink:0
+}
+@media(max-width:600px){.social-divider{display:none}}
+
+.social-num{
+  font-family:var(--ff-en);font-size:1.35rem;font-weight:900;
+  color:#fff;line-height:1;
+  text-shadow:0 0 20px rgba(245,184,48,.3)
+}
+.social-label{
+  font-family:var(--ff-en);font-size:.5rem;font-weight:600;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ember);display:flex;flex-direction:column;gap:1px
+}
+.social-label span{color:rgba(255,255,255,.55);font-weight:400;letter-spacing:.12em}
+
+/* Stars */
+.stars{display:flex;gap:2px;align-items:center}
+.star{width:12px;height:12px;fill:#ffd760}
+.star-empty{opacity:.25}
+
+/* Steam badge */
+.steam-badge{
+  display:flex;align-items:center;gap:9px;
+  border:1px solid rgba(200,148,58,.3);
+  padding:6px 16px;
+  background:rgba(200,148,58,.05)
+}
+.steam-logo{
+  display:flex;align-items:center;gap:6px;
+  font-family:var(--ff-en);font-size:.62rem;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:#fff
+}
+.steam-icon{width:18px;height:18px;opacity:.85}
+.steam-status{
+  font-family:var(--ff-en);font-size:.52rem;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ember)
+}
+
+.scroll-img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:center top;
+  opacity:0;transition:opacity .5s ease;pointer-events:none;z-index:0
+}
+.scroll-card:hover .scroll-img{opacity:.25}
+
+/* ═══════════════════════════════════════════
+   MOBILE OPTIMIZATIONS — max-width: 768px
+═══════════════════════════════════════════ */
+@media(max-width:768px){
+
+  /* NAV */
+  .nav{padding:12px 16px}
+  .nav.solid{padding:10px 16px}
+  .nav-id{font-size:.52rem;letter-spacing:.18em}
+  .lb{font-size:.52rem;padding:5px 9px;letter-spacing:.12em}
+
+  /* HERO */
+  .hero{min-height:100svh}
+  .hero-content{padding:80px 20px 40px}
+  .hero-vtext-l,.hero-vtext-r{display:none}
+  h1.hero-hl{
+    font-size:clamp(2rem,10vw,3.5rem);
+    line-height:1.0
+  }
+  html.lang-ko h1.hero-hl,html.lang-ja h1.hero-hl{
+    font-size:clamp(2rem,10vw,3.5rem)
+  }
+  .hero-hl-stroke{font-size:.72em}
+  .hero-eyebrow{font-size:.78rem}
+  .hero-sub{
+    font-size:1rem;
+    padding:12px 14px;
+    max-width:100%
+  }
+  .hero-acts{margin-bottom:1.4rem}
+  .cta{
+    padding:16px 28px;
+    font-size:.68rem;
+    letter-spacing:.14em;
+    width:100%;
+    justify-content:center
+  }
+  .hero-note{font-size:.75rem}
+  .chips{gap:6px}
+  .chip{font-size:.48rem;padding:4px 10px}
+
+  /* SOCIAL STRIP */
+  .social-strip{
+    padding:14px 16px;
+    gap:0 20px
+  }
+  .social-num{font-size:1.1rem}
+  .steam-badge{padding:5px 12px}
+
+  /* WORLD SECTION */
+  .world-art{height:clamp(420px,90vw,580px)}
+  .world-center{padding:28px 20px}
+  h2.sect-hl{font-size:clamp(1.5rem,6vw,2.5rem)}
+  html.lang-ko h2.sect-hl,html.lang-ja h2.sect-hl{font-size:clamp(1.5rem,6vw,2.4rem)}
+  .world-desc{font-size:.95rem}
+  .pillars{gap:4px}
+  .pillar{font-size:.48rem;padding:7px 12px}
+
+  /* WEAPONS */
+  .weapons-header{padding:0 16px 40px}
+  .w-card{flex:0 0 calc(50% - 14px)}
+  .w-card-inner{padding:20px 12px 18px}
+  .w-img-wrap{height:clamp(100px,22vw,160px)}
+  .w-name{font-size:.72rem;letter-spacing:.08em}
+  .w-desc{font-size:.78rem}
+  .weapons-ghost{font-size:clamp(12rem,55vw,30rem)}
+
+  /* PATHS / SCROLLS */
+  .paths-header{padding:0 16px 40px}
+  .scroll-body{min-height:230px;padding:22px 14px 18px}
+  .card-name{font-size:.72rem}
+  .card-desc{font-size:.78rem}
+  .rod-wrap,.strings{display:none}
+  .scrolls{gap:6px}
+
+  /* GALLERY */
+  .gallery-header{padding:0 16px 36px}
+  .gallery-section{padding:64px 0 80px}
+
+  /* TRAILER */
+  .trailer-section{padding:64px 16px}
+  .trailer-section::before,.trailer-section::after{display:none}
+
+  /* FAQ */
+  .faq-section{padding:64px 16px}
+  .faq-inner{max-width:100%}
+  .faq-q-t{font-size:.8rem}
+  .faq-a-t{font-size:.88rem}
+
+  /* SYSTEM REQUIREMENTS */
+  .sysreq-section{padding:64px 16px 80px}
+  .sysreq-ghost{font-size:clamp(12rem,55vw,28rem)}
+  .tier-btn{padding:11px 20px;font-size:.56rem}
+  .spec-row{padding:16px 16px}
+  .spec-label{font-size:.46rem;letter-spacing:.18em}
+  .spec-value{font-size:.9rem}
+
+  /* STICKY CTA */
+  .sticky{
+    left:10px;right:10px;bottom:10px;
+    padding:11px 14px;
+    border-radius:0
+  }
+  .sticky-label{font-size:.5rem}
+  .sticky-btn{font-size:.58rem;padding:9px 16px}
+
+  /* FOOTER */
+  footer{padding:36px 16px 90px}
+  .footer-seal{font-size:.9rem}
+  .footer-note{font-size:.58rem}
+}
+
+/* ═══════════════════════════════════════════
+   SMALL MOBILE — max-width: 400px
+═══════════════════════════════════════════ */
+@media(max-width:400px){
+  h1.hero-hl{font-size:clamp(2.2rem,14vw,3.5rem)}
+  .hero-eyebrow{font-size:.72rem}
+  .cta{font-size:.62rem;letter-spacing:.1em}
+  .w-card{flex:0 0 100%}
+  .world-center{padding:20px 16px}
+  .section-tag{font-size:.46rem;letter-spacing:.2em}
+  h2.sect-hl{font-size:clamp(1.5rem,9vw,2.4rem)}
+}
+
+/* ═══════════════════════════════════════════
+   TOUCH DEVICES — improve tap targets
+═══════════════════════════════════════════ */
+@media(pointer:coarse){
+  .lb{min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center}
+  .faq-q{min-height:52px}
+  .w-dot{min-height:32px;min-width:36px}
+  .w-arrow{width:48px;height:48px}
+  .play-ring{width:88px;height:88px}
+  .footer-link{min-height:44px;display:inline-flex;align-items:center}
+  /* On touch — show weapon images without needing hover */
+  .scroll-card .scroll-img{opacity:.18}
+  .w-card-inner{border-color:rgba(200,148,58,.18)}
+}
+
+/* ═══════════════════════════════════════════
+   LANDSCAPE MOBILE
+═══════════════════════════════════════════ */
+@media(max-width:900px) and (orientation:landscape) and (max-height:500px){
+  .hero{min-height:auto;padding-bottom:40px}
+  .hero-content{padding:72px 24px 36px}
+  h1.hero-hl{font-size:clamp(2rem,6vw,3.5rem)}
+  .hero-sub{font-size:.9rem;padding:10px 14px}
+}
+
+
+/* ═══════════════════════════
+   GAME TITLE — HERO
+═══════════════════════════ */
+.game-title-wrap{
+  display:flex;flex-direction:column;
+  align-items:flex-start;
+  margin-bottom:1.2rem;
+  position:relative
+}
+/* Main game name */
+.game-title{
+  font-family:var(--ff-en);font-weight:900;
+  font-size:clamp(1rem,2.5vw,1.8rem);
+  letter-spacing:.32em;text-transform:uppercase;
+  color:#fff;
+  text-shadow:0 2px 20px rgba(0,0,0,1),0 0 50px rgba(0,0,0,1);
+  line-height:1;
+  position:relative;display:inline-block
+}
+html.lang-ko .game-title,html.lang-ja .game-title{
+  font-family:var(--ff-ko);letter-spacing:.12em
+}
+html.lang-ja .game-title{font-family:var(--ff-ja)}
+
+/* Decorative lines flanking the title */
+.game-title-deco{
+  display:flex;align-items:center;gap:14px;
+  margin-bottom:8px
+}
+.game-title-line{
+  height:1px;background:linear-gradient(90deg,var(--ember),rgba(200,148,58,.3));
+  flex:1;max-width:60px
+}
+.game-title-line.right{
+  background:linear-gradient(270deg,var(--ember),rgba(200,148,58,.3))
+}
+.game-title-badge{
+  font-family:var(--ff-en);font-size:.58rem;font-weight:700;
+  letter-spacing:.25em;text-transform:uppercase;
+  color:#ffd760;
+  text-shadow:0 1px 8px rgba(0,0,0,1),0 0 20px rgba(245,184,48,.6)
+}
+/* Subtitle line below name */
+.game-subtitle-line{
+  display:flex;align-items:center;gap:10px;
+  margin-top:6px
+}
+.game-subtitle-dot{
+  width:4px;height:4px;border-radius:50%;
+  background:var(--ember);flex-shrink:0
+}
+.game-subtitle-text{
+  font-family:var(--ff-body);font-size:.82rem;
+  font-style:italic;color:#fff;
+  letter-spacing:.06em;
+  background:rgba(28,18,8,.75);
+  padding:4px 14px;
+  border-left:2px solid rgba(200,148,58,.5)
+}
+html.lang-ko .game-subtitle-text,html.lang-ja .game-subtitle-text{
+  font-style:normal;font-size:.7rem
+}
+
+@media(max-width:768px){
+  .game-title{font-size:clamp(1rem,5.5vw,1.5rem);letter-spacing:.2em}
+  .game-title-line{max-width:36px}
+  .game-subtitle-text{font-size:.68rem}
+}
+
+
+/* ═══════════════════════
+   HERO VIDEO CONTROLS
+═══════════════════════ */
+.hero-controls{
+  position:absolute;bottom:28px;right:28px;
+  z-index:10;display:flex;gap:10px;align-items:center
+}
+.hero-ctrl-btn{
+  width:42px;height:42px;border-radius:50%;
+  border:1px solid rgba(200,148,58,.45);
+  background:rgba(4,2,1,.65);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;cursor:pointer;
+  transition:all .25s ease;
+  opacity:.85
+}
+.hero-ctrl-btn:hover{
+  background:rgba(200,148,58,.25);
+  border-color:var(--ember);
+  opacity:1;transform:scale(1.08)
+}
+.hero-ctrl-btn:focus-visible{outline:1px solid var(--ember);outline-offset:3px}
+.hero-ctrl-btn svg{pointer-events:none;flex-shrink:0}
+
+/* Replay overlay on hero poster */
+.hero-replay{
+  position:absolute;
+  bottom:90px;right:0;left:0;
+  z-index:6;
+  display:none;align-items:center;justify-content:center;
+  background:transparent;
+  cursor:pointer;
+  pointer-events:none
+}
+.hero-replay.show{display:flex;pointer-events:auto}
+.hero-replay-ring{
+  width:76px;height:76px;border-radius:50%;
+  border:1px solid rgba(200,148,58,.55);
+  background:rgba(4,2,1,.45);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:3px;
+  transition:all .3s ease;
+  opacity:.85
+}
+.hero-replay:hover .hero-replay-ring{
+  background:rgba(200,148,58,.18);
+  border-color:var(--ember-hi);
+  opacity:1;transform:scale(1.06)
+}
+.hero-replay-icon{color:var(--ember-hi)}
+.hero-replay-text{
+  font-family:var(--ff-en);font-size:.4rem;
+  letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ember-hi);margin-top:1px
+}
+
+
+/* ═══════════════════════════
+   REVIEWS SECTION
+═══════════════════════════ */
+.reviews-section{
+  position:relative;padding:100px 0 120px;overflow:hidden;
+  background:linear-gradient(180deg,#160f08,#1a1208 30%,#1e1408 60%,#160f08)
+}
+.reviews-ghost{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:var(--ff-cn);font-weight:700;
+  font-size:clamp(16rem,38vw,48rem);
+  color:var(--ember);opacity:.014;
+  pointer-events:none;user-select:none;line-height:1
+}
+.reviews-header{text-align:center;padding:0 24px 60px;position:relative;z-index:1}
+
+/* Stats row */
+.reviews-stats{
+  display:flex;justify-content:center;flex-wrap:wrap;
+  gap:0;margin-bottom:72px;
+  max-width:900px;margin-left:auto;margin-right:auto;
+  border:1px solid rgba(200,148,58,.2);
+  position:relative;z-index:1
+}
+.reviews-stats::before{
+  content:'';position:absolute;top:-1px;left:10%;right:10%;height:2px;
+  background:linear-gradient(90deg,transparent,var(--ember),transparent)
+}
+.reviews-stat{
+  flex:1;min-width:160px;padding:28px 24px;text-align:center;
+  border-right:1px solid rgba(200,148,58,.15);
+  position:relative
+}
+.reviews-stat:last-child{border-right:none}
+.reviews-stat::after{
+  content:'';position:absolute;bottom:0;left:20%;right:20%;height:1px;
+  background:rgba(200,148,58,.1)
+}
+.rstat-num{
+  font-family:var(--ff-en);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;
+  color:#fff;line-height:1;margin-bottom:6px;
+  text-shadow:0 0 30px rgba(200,148,58,.25)
+}
+.rstat-label{
+  font-family:var(--ff-en);font-size:.52rem;font-weight:700;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--ember)
+}
+html.lang-ko .rstat-label,html.lang-ja .rstat-label{letter-spacing:.05em;text-transform:none}
+.rstat-sub{
+  font-size:.72rem;font-style:italic;color:var(--text-soft);margin-top:3px
+}
+html.lang-ko .rstat-sub,html.lang-ja .rstat-sub{font-style:normal}
+
+@media(max-width:600px){
+  .reviews-stats{flex-direction:column}
+  .reviews-stat{border-right:none;border-bottom:1px solid rgba(200,148,58,.15);padding:20px}
+  .reviews-stat:last-child{border-bottom:none}
+}
+
+/* Review cards — horizontal scroll on mobile */
+.reviews-track-outer{
+  position:relative;z-index:1;
+  overflow:hidden;padding:8px 0 24px
+}
+.reviews-track{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  max-width:1200px;margin:0 auto;padding:0 24px
+}
+@media(max-width:900px){.reviews-track{grid-template-columns:1fr 1fr}}
+@media(max-width:540px){.reviews-track{grid-template-columns:1fr}}
+
+/* Individual review card — bamboo scroll style */
+.review-card{
+  position:relative;
+  background:linear-gradient(160deg,rgba(200,148,58,.06),rgba(200,148,58,.02),rgba(0,0,0,.25));
+  border:1px solid rgba(200,148,58,.15);
+  padding:28px 24px 24px;
+  overflow:hidden;
+  transition:border-color .4s,transform .4s ease,background .4s
+}
+.review-card:hover{
+  border-color:rgba(200,148,58,.38);
+  background:linear-gradient(160deg,rgba(200,148,58,.1),rgba(200,148,58,.04),rgba(0,0,0,.15));
+  transform:translateY(-4px)
+}
+/* Top amber glow line */
+.review-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--ember),transparent);
+  opacity:0;transition:opacity .4s
+}
+.review-card:hover::before{opacity:1}
+/* Decorative corner mark */
+.review-card::after{
+  content:'"';position:absolute;top:10px;right:16px;
+  font-family:var(--ff-body);font-size:4rem;font-weight:900;line-height:1;
+  color:var(--ember);opacity:.1;pointer-events:none
+}
+
+/* Stars */
+.review-stars{
+  display:flex;gap:3px;margin-bottom:14px
+}
+.review-stars svg{width:13px;height:13px;fill:var(--ember-hi)}
+
+/* Quote */
+.review-quote{
+  font-family:var(--ff-body);font-size:1rem;font-style:italic;
+  color:#fff;line-height:1.75;margin-bottom:16px;
+  text-shadow:0 1px 6px rgba(0,0,0,.8)
+}
+html.lang-ko .review-quote,html.lang-ja .review-quote{font-style:normal;font-size:.94rem}
+
+/* Divider */
+.review-divider{
+  height:1px;
+  background:linear-gradient(90deg,rgba(200,148,58,.3),transparent);
+  margin-bottom:14px
+}
+
+/* Author */
+.review-author{
+  display:flex;align-items:center;gap:10px
+}
+.review-avatar{
+  width:28px;height:28px;border-radius:50%;
+  background:linear-gradient(135deg,rgba(200,148,58,.35),rgba(200,148,58,.1));
+  border:1px solid rgba(200,148,58,.3);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  font-family:var(--ff-cn);font-size:.75rem;color:var(--ember);font-weight:700
+}
+.review-name{
+  font-family:var(--ff-en);font-size:.68rem;font-weight:700;
+  letter-spacing:.1em;color:var(--paper)
+}
+.review-hours{
+  font-size:.62rem;font-style:italic;color:var(--text-soft);margin-top:1px
+}
+html.lang-ko .review-hours,html.lang-ja .review-hours{font-style:normal}
+/* Steam badge tiny */
+.review-steam{
+  margin-left:auto;font-family:var(--ff-en);font-size:.48rem;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.3);white-space:nowrap
+}
+
+/* Bottom CTA */
+.reviews-footer{
+  text-align:center;margin-top:52px;
+  position:relative;z-index:1
+}
+.reviews-steam-link{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--ff-en);font-size:.6rem;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ember);border:1px solid rgba(200,148,58,.3);
+  padding:12px 28px;
+  transition:all .3s ease
+}
+html.lang-ko .reviews-steam-link,html.lang-ja .reviews-steam-link{letter-spacing:.05em;text-transform:none}
+.reviews-steam-link:hover{
+  color:#fff;border-color:var(--ember);
+  background:rgba(200,148,58,.08)
+}
+
+</style>
+</head>
+<body>
+
+<div id="cursor" aria-hidden="true"></div>
+<div id="cursor-ring" aria-hidden="true"></div>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-id">
+    <img id="nav-logo" alt="Where Winds Meet">
+    <span id="nav-word">WHERE WINDS MEET</span>
+  </div>
+  <div class="lang-row" role="group" aria-label="Language selector">
+    <button class="lb on" data-lang="en" aria-pressed="true">EN</button>
+    <button class="lb" data-lang="ko" aria-pressed="false">KO</button>
+    <button class="lb" data-lang="ja" aria-pressed="false">JA</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero" aria-label="Hero section">
+  <div class="hero-world" aria-hidden="true">
+    <div class="hw-sky"></div>
+    <div class="hw-sun"></div>
+    <div class="hw-m1"></div>
+    <div class="hw-m2"></div>
+    <div class="hw-m3"></div>
+    <div class="hw-m4"></div>
+    <div class="hw-m5"></div>
+    <div class="hw-mist"></div>
+    <div class="hw-mist2"></div>
+    <img class="hero-poster" id="hero-poster" alt="">
+    <video class="hero-video" id="hero-video" src="assets/videos/hero.mp4" autoplay playsinline poster="assets/images/hero_poster.webp">
+    </video>
+  </div>
+  <div class="hero-vtext-l" aria-hidden="true">武俠</div>
+  <div class="hero-vtext-r" aria-hidden="true">江湖</div>
+  <div class="hero-veil" aria-hidden="true"></div>
+
+  <!-- Replay overlay — shows when video ends -->
+  <div class="hero-replay" id="hero-replay" role="button" tabindex="0" aria-label="Replay video">
+    <div class="hero-replay-ring">
+      <svg class="hero-replay-icon" width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+        <path d="M6 14a8 8 0 1 0 1.5-4.7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M6 7v4h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="hero-replay-text">Replay</span>
+    </div>
+  </div>
+
+  <!-- Hero video controls -->
+  <div class="hero-controls" aria-label="Video controls">
+    <button class="hero-ctrl-btn" id="hero-mute-btn" aria-label="Mute video">
+      <!-- Unmuted icon -->
+      <svg id="icon-sound-on" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+        <path d="M3 6.5h2.5L9 3.5v11L5.5 11.5H3v-5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+        <path d="M11.5 6a3 3 0 0 1 0 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M13 4a5.5 5.5 0 0 1 0 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+      <!-- Muted icon -->
+      <svg id="icon-sound-off" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" style="display:none">
+        <path d="M3 6.5h2.5L9 3.5v11L5.5 11.5H3v-5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+        <line x1="11.5" y1="6" x2="15.5" y2="12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        <line x1="15.5" y1="6" x2="11.5" y2="12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+  <div class="embers" id="embers" aria-hidden="true"></div>
+  <div class="hero-content">
+    <!-- GAME TITLE IDENTITY -->
+    <div class="game-title-wrap rv">
+      <div class="game-title-deco">
+        <div class="game-title-line"></div>
+        <span class="game-title-badge" data-i18n="game.badge">Open World Wuxia RPG</span>
+        <div class="game-title-line right"></div>
+      </div>
+      <div class="game-title" data-i18n="game.name">WHERE WINDS MEET</div>
+      <div class="game-subtitle-line">
+        <div class="game-subtitle-dot" aria-hidden="true"></div>
+        <span class="game-subtitle-text" data-i18n="game.tagline">10th-Century China · Free to Play · PC</span>
+      </div>
+    </div>
+
+    <p class="hero-eyebrow rv" data-i18n="hero.ey">Something stirs in the East. It has been waiting for you.</p>
+    <h1 class="hero-hl rv d1">
+      <span data-i18n="hero.h1">You Don't Know</span>
+      <span class="hero-hl-stroke" data-i18n="hero.h2">Who You Are Yet.</span>
+    </h1>
+    <p class="hero-sub rv d2" data-i18n="hero.sub">An ancient world is watching. Every path leads somewhere no map can show you. Who you become — only the wind will remember.</p>
+    <div class="hero-acts rv d3" style="flex-wrap:wrap;gap:14px;align-items:center">
+      <a href="#" class="cta" id="hero-cta" data-i18n="hero.cta" aria-label="Play Where Winds Meet on PC">
+        Claim Your Legend — Free
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+    <div class="rv d3" style="display:flex;align-items:center;gap:8px;margin-top:4px">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" style="opacity:.7">
+        <circle cx="9" cy="9" r="8" stroke="#fff" stroke-width="1.2"/>
+        <path d="M9 5a4 4 0 0 1 0 8" stroke="#fff" stroke-width="1.2" fill="none"/>
+        <circle cx="9" cy="9" r="2" fill="#fff"/>
+      </svg>
+      <span style="font-family:var(--ff-en);font-size:.55rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.7);text-shadow:0 1px 6px rgba(0,0,0,1)" data-i18n="social.steam_hero">Available Free on Steam</span>
+    </div>
+    <p class="hero-note rv d3" data-i18n="hero.note">Free to play. The Jianghu asks only one thing: that you enter.</p>
+    <div class="chips rv d4" aria-label="Game features">
+      <span class="chip" data-i18n="chip1">Open World</span>
+      <span class="chip" data-i18n="chip2">Martial Arts</span>
+      <span class="chip" data-i18n="chip3">Co-op</span>
+      <span class="chip" data-i18n="chip4">Ancient China</span>
+      <span class="chip" data-i18n="chip5">Wuxia RPG</span>
+    </div>
+  </div>
+  <div class="hero-baseline" aria-hidden="true"></div>
+</section>
+
+
+<!-- SOCIAL PROOF STRIP -->
+<div class="social-strip" role="region" aria-label="Game statistics">
+
+  <div class="social-item">
+    <div class="social-num">102K+</div>
+    <div class="social-label">
+      <span data-i18n="social.rev_label">Reviews</span><br>
+      <span data-i18n="social.on_steam">on Steam</span>
+    </div>
+  </div>
+
+  <div class="social-divider" aria-hidden="true"></div>
+
+  <div class="social-item">
+    <div>
+      <div class="stars" aria-label="Very Positive rating">
+        <svg class="star" viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg>
+        <svg class="star" viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg>
+        <svg class="star" viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg>
+        <svg class="star" viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg>
+        <svg class="star" viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg>
+      </div>
+      <div class="social-label" style="margin-top:4px">
+        <span data-i18n="social.very_pos">Very Positive</span><br>
+        <span data-i18n="social.reviews">87% Positive Reviews</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="social-divider" aria-hidden="true"></div>
+
+  <div class="social-item">
+    <div class="social-num" data-i18n="social.free_num">Free</div>
+    <div class="social-label">
+      <span data-i18n="social.to_play">to Play</span><br>
+      <span data-i18n="social.no_card">No credit card</span>
+    </div>
+  </div>
+
+  <div class="social-divider" aria-hidden="true"></div>
+
+  <div class="steam-badge">
+    <svg class="steam-icon" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+      <circle cx="9" cy="9" r="8" stroke="rgba(255,255,255,.7)" stroke-width="1.2"/>
+      <path d="M9 5a4 4 0 0 1 0 8" stroke="rgba(255,255,255,.7)" stroke-width="1.2" fill="none"/>
+      <circle cx="9" cy="9" r="2" fill="rgba(255,255,255,.7)"/>
+    </svg>
+    <div>
+      <div class="steam-logo" data-i18n="social.available">Available on Steam</div>
+      <div class="steam-status" data-i18n="social.now">Play Now — PC</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- WORLD -->
+<section class="world-section" aria-labelledby="world-h">
+  <div class="world-art" role="img" aria-label="Game world landscape art">
+    <div class="world-art-bg"></div>
+    <svg class="world-art-svg" viewBox="0 0 1440 500" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M0 500 L0 380 Q60 300 120 330 Q180 260 240 285 Q300 215 360 248 Q420 180 480 215 Q540 148 600 178 Q660 112 720 145 Q780 80 840 115 Q900 55 960 88 Q1020 30 1080 62 Q1140 10 1200 42 Q1260 -5 1320 28 L1380 15 L1440 30 L1440 500Z" fill="rgba(100,65,25,.32)"/>
+      <path d="M0 500 L0 420 Q80 340 160 370 Q220 290 300 325 Q370 250 440 288 Q510 210 580 252 Q650 175 720 215 Q790 145 860 185 Q930 115 1000 158 Q1070 88 1140 132 Q1200 68 1260 108 Q1310 55 1360 90 L1440 70 L1440 500Z" fill="rgba(80,52,18,.52)"/>
+      <path d="M0 500 L0 450 Q100 365 180 400 Q260 310 340 355 Q420 270 500 318 Q580 235 660 280 Q740 195 820 245 Q900 160 980 210 Q1060 125 1140 175 Q1210 98 1280 148 Q1340 88 1400 120 L1440 100 L1440 500Z" fill="rgba(60,38,12,.72)"/>
+      <path d="M0 500 L0 470 Q120 390 200 430 Q280 348 360 395 Q440 310 520 362 Q600 278 680 325 Q760 242 840 292 Q920 210 1000 260 Q1080 178 1160 228 Q1230 155 1300 198 Q1360 135 1440 165 L1440 500Z" fill="rgba(40,25,8,.88)"/>
+      <path d="M0 500 L0 488 Q180 472 360 482 Q540 470 720 480 Q900 470 1080 478 Q1260 466 1440 472 L1440 500Z" fill="rgba(200,148,58,.055)"/>
+      <circle cx="1100" cy="85" r="44" fill="rgba(200,148,58,.09)"/>
+      <circle cx="1100" cy="85" r="32" fill="rgba(200,148,58,.07)"/>
+      <path d="M400 182 Q410 172 420 182 M415 174 L415 186" stroke="rgba(200,148,58,.15)" stroke-width="1.2" fill="none"/>
+      <path d="M432 162 Q442 152 452 162 M447 154 L447 167" stroke="rgba(200,148,58,.12)" stroke-width="1.2" fill="none"/>
+      <path d="M458 174 Q468 164 478 174 M473 166 L473 179" stroke="rgba(200,148,58,.09)" stroke-width="1.2" fill="none"/>
+      <line x1="82" y1="500" x2="87" y2="195" stroke="rgba(200,148,58,.055)" stroke-width="2.5"/>
+      <line x1="92" y1="500" x2="90" y2="215" stroke="rgba(200,148,58,.04)" stroke-width="1.5"/>
+      <path d="M1330 500 L1330 345 M1282 378 L1330 345 L1378 378 M1292 357 L1330 332 L1368 357 M1308 338 L1330 316 L1352 338" stroke="rgba(200,148,58,.055)" stroke-width="1.5" fill="none"/>
+    </svg>
+    <div class="world-mist" aria-hidden="true"></div>
+    <div class="world-veil">
+      <div class="world-center">
+        <p class="section-tag rv" data-i18n="world.tag">The Living World</p>
+        <h2 class="sect-hl rv d1" id="world-h" data-i18n="world.h">Every Wind Carries a Name</h2>
+        <p class="world-desc rv d2" data-i18n="world.desc">The Jianghu is not a game map. It is a world that breathes. Step into a living 10th-century China — unscripted, untamed, and waiting.</p>
+        <div class="pillars rv d3" role="list">
+          <span class="pillar" data-i18n="world.p1">Fluid Combat</span>
+          <span class="pillar" data-i18n="world.p2">Living World</span>
+          <span class="pillar" data-i18n="world.p3">Cinematic Traversal</span>
+          <span class="pillar" data-i18n="world.p4">Deep Lore</span>
+          <span class="pillar" data-i18n="world.p5">Co-op / Solo</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- WEAPONS ARSENAL -->
+<section class="weapons-section" aria-labelledby="weapons-h">
+  <div class="weapons-bg" aria-hidden="true"></div>
+  <div class="weapons-ghost" aria-hidden="true">兵</div>
+  <div class="weapons-stroke top" aria-hidden="true"></div>
+  <div class="weapons-stroke bot" aria-hidden="true"></div>
+
+  <div class="weapons-header">
+    <p class="section-tag rv" data-i18n="wpn.tag">Master Your Arsenal</p>
+    <h2 class="sect-hl rv d1" id="weapons-h" data-i18n="wpn.h">Choose Your Weapon</h2>
+  </div>
+
+  <div class="weapons-track-wrap">
+    <div class="weapons-arrows" aria-hidden="true">
+      <button class="w-arrow" id="w-prev" aria-label="Previous weapon">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="w-arrow" id="w-next" aria-label="Next weapon">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2L10 7L5 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    <div class="weapons-track" id="weapons-track" role="list">
+
+      <div class="w-card rv active" style="--rot:-12deg" role="listitem" data-idx="0">
+        <div class="w-card-inner">
+          <span class="w-num" aria-hidden="true">一</span>
+          <div class="w-img-wrap">
+            <img class="w-img" src="assets/images/sword.webp" alt="Sword weapon" loading="lazy">
+          </div>
+          <div class="w-line" aria-hidden="true"></div>
+          <h3 class="w-name" data-i18n="wpn.w1.n">Sword</h3>
+          <p class="w-desc" data-i18n="wpn.w1.d">Grace and lethality as one. The soul of the Jianghu.</p>
+        </div>
+      </div>
+
+      <div class="w-card rv d1" style="--rot:-14deg" role="listitem" data-idx="1">
+        <div class="w-card-inner">
+          <span class="w-num" aria-hidden="true">二</span>
+          <div class="w-img-wrap">
+            <img class="w-img" src="assets/images/dual_blades.webp" alt="Dual Blades weapon" loading="lazy">
+          </div>
+          <div class="w-line" aria-hidden="true"></div>
+          <h3 class="w-name" data-i18n="wpn.w2.n">Dual Blades</h3>
+          <p class="w-desc" data-i18n="wpn.w2.d">Two become one. Speed and chaos unleashed.</p>
+        </div>
+      </div>
+
+      <div class="w-card rv d2" style="--rot:-16deg" role="listitem" data-idx="2">
+        <div class="w-card-inner">
+          <span class="w-num" aria-hidden="true">三</span>
+          <div class="w-img-wrap">
+            <img class="w-img" src="assets/images/spear.webp" alt="Spear weapon" loading="lazy">
+          </div>
+          <div class="w-line" aria-hidden="true"></div>
+          <h3 class="w-name" data-i18n="wpn.w3.n">Spear</h3>
+          <p class="w-desc" data-i18n="wpn.w3.d">Strike before they reach you. Dominate the distance.</p>
+        </div>
+      </div>
+
+      <div class="w-card rv d3" style="--rot:-18deg" role="listitem" data-idx="3">
+        <div class="w-card-inner">
+          <span class="w-num" aria-hidden="true">四</span>
+          <div class="w-img-wrap">
+            <img class="w-img" src="assets/images/mo_blade.webp" alt="Mo Blade weapon" loading="lazy">
+          </div>
+          <div class="w-line" aria-hidden="true"></div>
+          <h3 class="w-name" data-i18n="wpn.w4.n">Mo Blade</h3>
+          <p class="w-desc" data-i18n="wpn.w4.d">Brute force shaped into brutal art.</p>
+        </div>
+      </div>
+
+      <div class="w-card rv d4" style="--rot:-10deg" role="listitem" data-idx="4">
+        <div class="w-card-inner">
+          <span class="w-num" aria-hidden="true">五</span>
+          <div class="w-img-wrap">
+            <img class="w-img" src="assets/images/rope_dart.webp" alt="Rope Dart weapon" loading="lazy">
+          </div>
+          <div class="w-line" aria-hidden="true"></div>
+          <h3 class="w-name" data-i18n="wpn.w5.n">Rope Dart</h3>
+          <p class="w-desc" data-i18n="wpn.w5.d">Unpredictable. Untraceable. Unstoppable.</p>
+        </div>
+      </div>
+
+      <div class="w-card rv d3" style="--rot:-8deg" role="listitem" data-idx="5">
+        <div class="w-card-inner">
+          <span class="w-num" aria-hidden="true">六</span>
+          <div class="w-img-wrap">
+            <img class="w-img" src="assets/images/fan.webp" alt="Fan weapon" loading="lazy">
+          </div>
+          <div class="w-line" aria-hidden="true"></div>
+          <h3 class="w-name" data-i18n="wpn.w6.n">Fan</h3>
+          <p class="w-desc" data-i18n="wpn.w6.d">Beauty conceals the blade. Elegance is deadly.</p>
+        </div>
+      </div>
+
+      <div class="w-card rv d4" style="--rot:-20deg" role="listitem" data-idx="6">
+        <div class="w-card-inner">
+          <span class="w-num" aria-hidden="true">七</span>
+          <div class="w-img-wrap">
+            <img class="w-img" src="assets/images/umbrella.webp" alt="Umbrella weapon" loading="lazy">
+          </div>
+          <div class="w-line" aria-hidden="true"></div>
+          <h3 class="w-name" data-i18n="wpn.w7.n">Umbrella</h3>
+          <p class="w-desc" data-i18n="wpn.w7.d">A shelter and a slaughter — in the same hand.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="weapons-dots" id="weapons-dots" role="tablist" aria-label="Weapon navigation">
+    <button class="w-dot on" data-page="0" role="tab" aria-selected="true" aria-label="Page 1"></button>
+    <button class="w-dot" data-page="1" role="tab" aria-selected="false" aria-label="Page 2"></button>
+    <button class="w-dot" data-page="2" role="tab" aria-selected="false" aria-label="Page 3"></button>
+  </div>
+
+</section>
+
+<div class="divider" aria-hidden="true"></div>
+
+<!-- PATHS — HANGING SCROLLS -->
+<section class="paths-section" aria-labelledby="paths-h">
+  <div class="paths-bg-glow" aria-hidden="true"></div>
+  <div class="paths-ghost" aria-hidden="true">道</div>
+  <div class="paths-header">
+    <p class="paths-label rv" data-i18n="paths.tag">Choose Your Path</p>
+    <h2 class="sect-hl rv d1" id="paths-h" data-i18n="paths.h">Who Will You Be?</h2>
+  </div>
+  <div class="rod-wrap rv d1" aria-hidden="true"><div class="rod"></div></div>
+  <div class="strings rv d1" aria-hidden="true">
+    <div class="string-line"></div>
+    <div class="string-line"></div>
+    <div class="string-line"></div>
+    <div class="string-line"></div>
+    <div class="string-line"></div>
+  </div>
+  <div class="scrolls" role="list">
+    <article class="scroll rv" style="--sw:5.5s;--sd:0s;--s1:-.35deg;--s2:.35deg" role="listitem">
+      <div class="scroll-top"></div>
+      <div class="scroll-body">
+        <img class="scroll-img" src="assets/images/screenshot_3.webp" alt="" aria-hidden="true" loading="lazy">
+        <span class="scroll-num" aria-hidden="true">一</span>
+        <svg class="scroll-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true"><line x1="18" y1="2" x2="18" y2="34" stroke="rgba(200,148,58,.7)" stroke-width="1.5"/><path d="M11 8L18 2L25 8" stroke="rgba(200,148,58,.7)" stroke-width="1.5" fill="none"/><line x1="8" y1="15" x2="28" y2="15" stroke="rgba(200,148,58,.4)" stroke-width="1"/><line x1="10" y1="23" x2="26" y2="23" stroke="rgba(200,148,58,.22)" stroke-width="1"/></svg>
+        <div class="scroll-div"></div>
+        <h3 class="card-name" data-i18n="paths.c1.n">The Swordmaster</h3>
+        <p class="card-desc" data-i18n="paths.c1.d">Perfect every strike. Become untouchable.</p>
+      </div>
+      <div class="scroll-bot"></div>
+      <div class="scroll-tassel" aria-hidden="true"><div class="tsl"></div><div class="tsl"></div><div class="tsl"></div></div>
+    </article>
+    <article class="scroll rv d1" style="--sw:7s;--sd:-1.5s;--s1:-.5deg;--s2:.3deg" role="listitem">
+      <div class="scroll-top"></div>
+      <div class="scroll-body">
+        <img class="scroll-img" src="assets/images/screenshot_1.webp" alt="" aria-hidden="true" loading="lazy">
+        <span class="scroll-num" aria-hidden="true">二</span>
+        <svg class="scroll-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true"><circle cx="18" cy="18" r="12" stroke="rgba(200,148,58,.65)" stroke-width="1.5"/><path d="M18 6Q25 12 18 18Q11 24 18 30" stroke="rgba(200,148,58,.38)" stroke-width="1" fill="none"/><circle cx="18" cy="18" r="2.8" fill="rgba(200,148,58,.5)"/></svg>
+        <div class="scroll-div"></div>
+        <h3 class="card-name" data-i18n="paths.c2.n">The Wanderer</h3>
+        <p class="card-desc" data-i18n="paths.c2.d">Follow no map. Write your own legend.</p>
+      </div>
+      <div class="scroll-bot"></div>
+      <div class="scroll-tassel" aria-hidden="true"><div class="tsl"></div><div class="tsl"></div><div class="tsl"></div></div>
+    </article>
+    <article class="scroll rv d2" style="--sw:6.2s;--sd:-.8s;--s1:-.22deg;--s2:.5deg" role="listitem">
+      <div class="scroll-top"></div>
+      <div class="scroll-body">
+        <img class="scroll-img" src="assets/images/screenshot_2.webp" alt="" aria-hidden="true" loading="lazy">
+        <span class="scroll-num" aria-hidden="true">三</span>
+        <svg class="scroll-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true"><rect x="3" y="3" width="11" height="11" stroke="rgba(200,148,58,.7)" stroke-width="1.5"/><rect x="22" y="3" width="11" height="11" stroke="rgba(200,148,58,.35)" stroke-width="1"/><rect x="3" y="22" width="11" height="11" stroke="rgba(200,148,58,.35)" stroke-width="1"/><rect x="22" y="22" width="11" height="11" stroke="rgba(200,148,58,.7)" stroke-width="1.5"/><path d="M14 8.5L22 8.5M8.5 14L8.5 22" stroke="rgba(200,148,58,.2)" stroke-width="1"/></svg>
+        <div class="scroll-div"></div>
+        <h3 class="card-name" data-i18n="paths.c3.n">The Strategist</h3>
+        <p class="card-desc" data-i18n="paths.c3.d">Win before the fight begins.</p>
+      </div>
+      <div class="scroll-bot"></div>
+      <div class="scroll-tassel" aria-hidden="true"><div class="tsl"></div><div class="tsl"></div><div class="tsl"></div></div>
+    </article>
+    <article class="scroll rv d3" style="--sw:5s;--sd:-2.2s;--s1:-.42deg;--s2:.42deg" role="listitem">
+      <div class="scroll-top"></div>
+      <div class="scroll-body">
+        <img class="scroll-img" src="assets/images/screenshot_4.webp" alt="" aria-hidden="true" loading="lazy">
+        <span class="scroll-num" aria-hidden="true">四</span>
+        <svg class="scroll-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true"><path d="M4 32L4 19L10 12L18 19L26 8L32 15L32 32Z" stroke="rgba(200,148,58,.7)" stroke-width="1.5" fill="rgba(200,148,58,.04)"/><line x1="2" y1="32" x2="34" y2="32" stroke="rgba(200,148,58,.35)" stroke-width="1"/></svg>
+        <div class="scroll-div"></div>
+        <h3 class="card-name" data-i18n="paths.c4.n">The Builder</h3>
+        <p class="card-desc" data-i18n="paths.c4.d">Shape towns. Leave your mark.</p>
+      </div>
+      <div class="scroll-bot"></div>
+      <div class="scroll-tassel" aria-hidden="true"><div class="tsl"></div><div class="tsl"></div><div class="tsl"></div></div>
+    </article>
+    <article class="scroll rv d4" style="--sw:8s;--sd:-3s;--s1:-.6deg;--s2:.22deg" role="listitem">
+      <div class="scroll-top"></div>
+      <div class="scroll-body">
+        <img class="scroll-img" src="assets/images/screenshot_5.webp" alt="" aria-hidden="true" loading="lazy">
+        <span class="scroll-num" aria-hidden="true">五</span>
+        <svg class="scroll-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true"><path d="M18 2L22 12L33 15L24.5 23L27 33L18 28.5L9 33L11.5 23L3 15L14 12Z" stroke="rgba(200,148,58,.7)" stroke-width="1.5" fill="rgba(200,148,58,.06)"/></svg>
+        <div class="scroll-div"></div>
+        <h3 class="card-name" data-i18n="paths.c5.n">The Seeker</h3>
+        <p class="card-desc" data-i18n="paths.c5.d">Some truths are buried deep.</p>
+      </div>
+      <div class="scroll-bot"></div>
+      <div class="scroll-tassel" aria-hidden="true"><div class="tsl"></div><div class="tsl"></div><div class="tsl"></div></div>
+    </article>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="gallery-section" aria-labelledby="gallery-h">
+  <div class="gallery-header">
+    <p class="section-tag rv" data-i18n="gal.tag">The World Awaits</p>
+    <h2 class="sect-hl rv d1" id="gallery-h" data-i18n="gal.h">See the Jianghu</h2>
+  </div>
+  <div class="gallery-grid" role="list">
+    <div class="g-frame rv" role="listitem">
+      <div class="g-top-line" aria-hidden="true"></div>
+      <img class="g-img" loading="lazy" alt="A lone warrior and horse stand before colossal guardian statues amid a crimson battlefield">
+      <div class="g-overlay" data-i18n="gal.l1">The Martial World</div>
+    </div>
+    <div class="g-frame rv d1" role="listitem">
+      <div class="g-top-line" aria-hidden="true"></div>
+      <img class="g-img" loading="lazy" alt="Swordmaster rests in a rainy bamboo forest cradling a fallen companion">
+      <div class="g-overlay" data-i18n="gal.l2">Where the Rain Falls</div>
+    </div>
+    <div class="g-frame rv d2" role="listitem">
+      <div class="g-top-line" aria-hidden="true"></div>
+      <img class="g-img" loading="lazy" alt="Two warriors clash in an explosive duel beneath a blood-red sky">
+      <div class="g-overlay" data-i18n="gal.l3">Where Legends Are Born</div>
+    </div>
+    <div class="g-frame rv d3" role="listitem">
+      <div class="g-top-line" aria-hidden="true"></div>
+      <img class="g-img" loading="lazy" alt="A lone swordsman cuts through enemies before an ancient Chinese gate at night">
+      <div class="g-overlay" data-i18n="gal.l4">Ancient Paths</div>
+    </div>
+    <div class="g-frame rv d4" role="listitem">
+      <div class="g-top-line" aria-hidden="true"></div>
+      <img class="g-img" loading="lazy" alt="A mysterious masked warrior stands in a frozen wasteland of planted swords">
+      <div class="g-overlay" data-i18n="gal.l5">The Wandering Seeker</div>
+    </div>
+  </div>
+</section>
+
+<!-- TRAILER -->
+<section class="trailer-section" aria-labelledby="trailer-h">
+  <div class="trailer-inner">
+    <div class="trailer-header">
+      <p class="section-tag rv" data-i18n="tra.tag">Official Trailer</p>
+      <h2 class="sect-hl rv d1" id="trailer-h" data-i18n="tra.h">Witness the Legend</h2>
+      <p class="t-sub rv d2" data-i18n="tra.sub">Watch the world come alive.</p>
+    </div>
+    <div class="t-player rv d2">
+      <div class="t-ph" id="t-ph">
+        <img src="assets/images/screenshot_3.webp" alt="Trailer thumbnail" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top">
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,2,1,.2),rgba(4,2,1,.05) 40%,rgba(4,2,1,.4))"></div>
+      </div>
+      <video class="t-video" id="t-video" src="assets/videos/trailer.mp4" playsinline aria-label="Game trailer">
+      </video>
+      <button class="play-ring" id="play-btn" aria-label="Play official trailer" data-state="paused">
+        <!-- Play icon -->
+        <svg id="icon-play" width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true"><path d="M7 4.5L18 11L7 17.5Z" fill="rgba(240,192,96,.95)"/></svg>
+        <!-- Pause icon -->
+        <svg id="icon-pause" width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true" style="display:none"><rect x="5" y="4" width="4" height="14" rx="1.5" fill="rgba(240,192,96,.95)"/><rect x="13" y="4" width="4" height="14" rx="1.5" fill="rgba(240,192,96,.95)"/></svg>
+      </button>
+    </div>
+    <div class="t-cta rv">
+      <a href="#" class="cta" id="tra-cta" data-i18n="tra.cta">
+        Enter Jianghu
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- SYSTEM REQUIREMENTS -->
+<section class="sysreq-section" aria-labelledby="sysreq-h">
+  <div class="sysreq-ghost" aria-hidden="true">硬</div>
+  <div class="sysreq-inner">
+    <div class="sysreq-header">
+      <p class="section-tag rv" data-i18n="sys.tag">System Requirements</p>
+      <h2 class="sect-hl rv d1" id="sysreq-h" data-i18n="sys.h">Is Your Blade Ready?</h2>
+    </div>
+
+    <!-- Toggle -->
+    <div class="tier-toggle rv d2" role="group" aria-label="Select specification tier">
+      <button class="tier-btn active" id="btn-min" aria-pressed="true" data-i18n="sys.min">Minimum</button>
+      <button class="tier-btn" id="btn-rec" aria-pressed="false" data-i18n="sys.rec">Recommended</button>
+    </div>
+
+    <!-- MINIMUM -->
+    <div class="specs-panel active" id="panel-min" aria-label="Minimum requirements">
+      <div class="specs-grid">
+
+        <div class="spec-row rv">
+          <div class="spec-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="2" y="5" width="24" height="16" rx="1" stroke="rgba(200,148,58,.8)" stroke-width="1.4"/><line x1="8" y1="21" x2="20" y2="21" stroke="rgba(200,148,58,.8)" stroke-width="1.4"/><line x1="6" y1="24" x2="22" y2="24" stroke="rgba(200,148,58,.5)" stroke-width="1.2"/></svg>
+          </div>
+          <div class="spec-content">
+            <p class="spec-label" data-i18n="sys.os.lbl">Operating System</p>
+            <p class="spec-value">Windows 10 / 11 <span style="font-size:.75em;color:#d4c090">(64-bit)</span></p>
+          </div>
+        </div>
+
+        <div class="spec-row rv d1">
+          <div class="spec-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="4" y="7" width="20" height="14" rx="1" stroke="rgba(200,148,58,.8)" stroke-width="1.4"/><line x1="9" y1="11" x2="19" y2="11" stroke="rgba(200,148,58,.5)" stroke-width="1"/><line x1="9" y1="14" x2="19" y2="14" stroke="rgba(200,148,58,.5)" stroke-width="1"/><line x1="9" y1="17" x2="16" y2="17" stroke="rgba(200,148,58,.5)" stroke-width="1"/></svg>
+          </div>
+          <div class="spec-content">
+            <p class="spec-label" data-i18n="sys.cpu.lbl">Processor</p>
+            <p class="spec-value">Intel Core i7-7700K</p>
+            <p class="spec-note">AMD Ryzen 5 1600</p>
+          </div>
+        </div>
+
+        <div class="spec-row rv d2">
+          <div class="spec-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="3" y="10" width="22" height="8" rx="1" stroke="rgba(200,148,58,.8)" stroke-width="1.4"/><rect x="6" y="13" width="3" height="2" rx=".5" fill="rgba(200,148,58,.5)"/><rect x="11" y="13" width="3" height="2" rx=".5" fill="rgba(200,148,58,.5)"/><rect x="16" y="13" width="3" height="2" rx=".5" fill="rgba(200,148,58,.5)"/><line x1="1" y1="14" x2="3" y2="14" stroke="rgba(200,148,58,.5)" stroke-width="1.2"/><line x1="25" y1="14" x2="27" y2="14" stroke="rgba(200,148,58,.5)" stroke-width="1.2"/></svg>
+          </div>
+          <div class="spec-content">
+            <p class="spec-label" data-i18n="sys.ram.lbl">Memory</p>
+            <p class="spec-value">16 GB RAM</p>
+          </div>
+        </div>
+
+        <div class="spec-row rv d3">
+          <div class="spec-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="2" y="8" width="24" height="14" rx="1" stroke="rgba(200,148,58,.8)" stroke-width="1.4"/><circle cx="9" cy="15" r="3" stroke="rgba(200,148,58,.6)" stroke-width="1.2"/><line x1="14" y1="12" x2="22" y2="12" stroke="rgba(200,148,58,.4)" stroke-width="1"/><line x1="14" y1="15" x2="22" y2="15" stroke="rgba(200,148,58,.4)" stroke-width="1"/><line x1="14" y1="18" x2="19" y2="18" stroke="rgba(200,148,58,.4)" stroke-width="1"/></svg>
+          </div>
+          <div class="spec-content">
+            <p class="spec-label" data-i18n="sys.gpu.lbl">Graphics</p>
+            <p class="spec-value">NVIDIA GTX 1060 <span style="font-size:.75em;color:#d4c090">(6 GB)</span></p>
+            <p class="spec-note">AMD RX 480 (8 GB)</p>
+          </div>
+        </div>
+
+        <div class="spec-row rv d1">
+          <div class="spec-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M14 4 L24 9 L24 19 L14 24 L4 19 L4 9 Z" stroke="rgba(200,148,58,.8)" stroke-width="1.4"/><path d="M14 4 L14 24" stroke="rgba(200,148,58,.35)" stroke-width="1"/><path d="M4 9 L24 9" stroke="rgba(200,148,58,.35)" stroke-width="1"/><path d="M4 19 L24 19" stroke="rgba(200,148,58,.35)" stroke-width="1"/></svg>
+          </div>
+          <div class="spec-content">
+            <p class="spec-label" data-i18n="sys.dx.lbl">DirectX</p>
+            <p class="spec-value">Version 12</p>
+          </div>
+        </div>
+
+        <div class="spec-row rv d2">
+          <div class="spec-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="10" stroke="rgba(200,148,58,.8)" stroke-width="1.4"/><path d="M14 4 Q18 14 14 24" stroke="rgba(200,148,58,.4)" stroke-width="1" fill="none"/><path d="M14 4 Q10 14 14 24" stroke="rgba(200,148,58,.4)" stroke-width="1" fill="none"/><line x1="4" y1="14" x2="24" y2="14" stroke="rgba(200,148,58,.4)" stroke-width="1"/></svg>
+          </div>
+          <div class="spec-content">
+            <p class="spec-label" data-i18n="sys.net.lbl">Network</p>
+            <p class="spec-value" data-i18n="sys.net.val">Broadband Internet</p>
+          </div>
+        </div>
+
+        <div class="spec-row full rv d3">
+          <div class="spec-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="5" y="6" width="18" height="16" rx="1" stroke="rgba(200,148,58,.8)" stroke-width="1.4"/><line x1="9" y1="10" x2="19" y2="10" stroke="rgba(200,148,58,.4)" stroke-width="1"/><line x1="9" y1="14" x2="16" y2="14" stroke="rgba(200,148,58,.4)" stroke-width="1"/><circle cx="19" cy="19" r="3" fill="rgba(200,148,58,.15)" stroke="rgba(200,148,58,.6)" stroke-width="1"/><path d="M18 19 L19.5 20 L21 18" stroke="rgba(200,148,58,.8)" stroke-width="1" fill="none"/></svg>
+          </div>
+          <div class="spec-content">
+            <p class="spec-label" data-i18n="sys.sto.lbl">Storage</p>
+            <p class="spec-value">100 GB <span style="font-size:.75em;color:#d4c090" data-i18n="sys.sto.avail">available space</span></p>
+            <p class="spec-note" data-i18n="sys.sto.note">SSD installation recommended for best performance</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RECOMMENDED -->
+    <div class="specs-panel" id="panel-rec" aria-label="Recommended requirements">
+      <div class="specs-grid">
+
+        <div class="spec-row rv">
+          <div class="spec-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="2" y="5" width="24" height="16" rx="1" stroke="rgba(200,148,58,.8)" stroke-width="1.4"/><line x1="8" y1="21" x2="20" y2="21" stroke="rgba(200,148,58,.8)" stroke-width="1.4"/><line x1="6" y1="24" x2="22" y2="24" stroke="rgba(200,148,58,.5)" stroke-width="1.2"/></svg>
+          </div>
+          <div class="spec-content">
+            <p class="spec-label" data-i18n="sys.os.lbl">Operating System</p>
+            <p class="spec-value">Windows 10 / 11 <span style="font-size:.75em;color:#d4c090">(64-bit)</span></p>
+          </div>
+        </div>
+
+        <div class="spec-row rv d1">
+          <div class="spec-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="4" y="7" width="20" height="14" rx="1" stroke="rgba(200,148,58,.8)" stroke-width="1.4"/><line x1="9" y1="11" x2="19" y2="11" stroke="rgba(200,148,58,.5)" stroke-width="1"/><line x1="9" y1="14" x2="19" y2="14" stroke="rgba(200,148,58,.5)" stroke-width="1"/><line x1="9" y1="17" x2="16" y2="17" stroke="rgba(200,148,58,.5)" stroke-width="1"/></svg>
+          </div>
+          <div class="spec-content">
+            <p class="spec-label" data-i18n="sys.cpu.lbl">Processor</p>
+            <p class="spec-value">Intel Core i7-10700</p>
+            <p class="spec-note">AMD Ryzen 7 3700X</p>
+          </div>
+        </div>
+
+        <div class="spec-row rv d2">
+          <div class="spec-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="3" y="10" width="22" height="8" rx="1" stroke="rgba(200,148,58,.8)" stroke-width="1.4"/><rect x="6" y="13" width="3" height="2" rx=".5" fill="rgba(200,148,58,.5)"/><rect x="11" y="13" width="3" height="2" rx=".5" fill="rgba(200,148,58,.5)"/><rect x="16" y="13" width="3" height="2" rx=".5" fill="rgba(200,148,58,.5)"/><line x1="1" y1="14" x2="3" y2="14" stroke="rgba(200,148,58,.5)" stroke-width="1.2"/><line x1="25" y1="14" x2="27" y2="14" stroke="rgba(200,148,58,.5)" stroke-width="1.2"/></svg>
+          </div>
+          <div class="spec-content">
+            <p class="spec-label" data-i18n="sys.ram.lbl">Memory</p>
+            <p class="spec-value">32 GB RAM</p>
+          </div>
+        </div>
+
+        <div class="spec-row rv d3">
+          <div class="spec-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="2" y="8" width="24" height="14" rx="1" stroke="rgba(200,148,58,.8)" stroke-width="1.4"/><circle cx="9" cy="15" r="3" stroke="rgba(200,148,58,.6)" stroke-width="1.2"/><line x1="14" y1="12" x2="22" y2="12" stroke="rgba(200,148,58,.4)" stroke-width="1"/><line x1="14" y1="15" x2="22" y2="15" stroke="rgba(200,148,58,.4)" stroke-width="1"/><line x1="14" y1="18" x2="19" y2="18" stroke="rgba(200,148,58,.4)" stroke-width="1"/></svg>
+          </div>
+          <div class="spec-content">
+            <p class="spec-label" data-i18n="sys.gpu.lbl">Graphics</p>
+            <p class="spec-value">NVIDIA RTX 2070 SUPER</p>
+            <p class="spec-note">AMD RX 6700 XT · Intel ARC A750</p>
+          </div>
+        </div>
+
+        <div class="spec-row rv d1">
+          <div class="spec-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M14 4 L24 9 L24 19 L14 24 L4 19 L4 9 Z" stroke="rgba(200,148,58,.8)" stroke-width="1.4"/><path d="M14 4 L14 24" stroke="rgba(200,148,58,.35)" stroke-width="1"/><path d="M4 9 L24 9" stroke="rgba(200,148,58,.35)" stroke-width="1"/><path d="M4 19 L24 19" stroke="rgba(200,148,58,.35)" stroke-width="1"/></svg>
+          </div>
+          <div class="spec-content">
+            <p class="spec-label" data-i18n="sys.dx.lbl">DirectX</p>
+            <p class="spec-value">Version 12</p>
+          </div>
+        </div>
+
+        <div class="spec-row rv d2">
+          <div class="spec-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="10" stroke="rgba(200,148,58,.8)" stroke-width="1.4"/><path d="M14 4 Q18 14 14 24" stroke="rgba(200,148,58,.4)" stroke-width="1" fill="none"/><path d="M14 4 Q10 14 14 24" stroke="rgba(200,148,58,.4)" stroke-width="1" fill="none"/><line x1="4" y1="14" x2="24" y2="14" stroke="rgba(200,148,58,.4)" stroke-width="1"/></svg>
+          </div>
+          <div class="spec-content">
+            <p class="spec-label" data-i18n="sys.net.lbl">Network</p>
+            <p class="spec-value" data-i18n="sys.net.val">Broadband Internet</p>
+          </div>
+        </div>
+
+        <div class="spec-row full rv d3">
+          <div class="spec-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="5" y="6" width="18" height="16" rx="1" stroke="rgba(200,148,58,.8)" stroke-width="1.4"/><line x1="9" y1="10" x2="19" y2="10" stroke="rgba(200,148,58,.4)" stroke-width="1"/><line x1="9" y1="14" x2="16" y2="14" stroke="rgba(200,148,58,.4)" stroke-width="1"/><circle cx="19" cy="19" r="3" fill="rgba(200,148,58,.15)" stroke="rgba(200,148,58,.6)" stroke-width="1"/><path d="M18 19 L19.5 20 L21 18" stroke="rgba(200,148,58,.8)" stroke-width="1" fill="none"/></svg>
+          </div>
+          <div class="spec-content">
+            <p class="spec-label" data-i18n="sys.sto.lbl">Storage</p>
+            <p class="spec-value">100 GB <span style="font-size:.75em;color:#d4c090" data-i18n="sys.sto.avail">available space</span></p>
+            <p class="spec-note" data-i18n="sys.sto.note">SSD installation recommended for best performance</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Bottom nudge -->
+    <div class="sysreq-footer rv">
+      <p class="sysreq-note" data-i18n="sys.footnote">Requires 64-bit processor and operating system</p>
+      <a href="#" class="cta" id="sysreq-cta" data-i18n="sys.cta">
+        Play Free on PC
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider" aria-hidden="true"></div>
+
+
+<!-- REVIEWS -->
+<div class="divider" aria-hidden="true"></div>
+
+<section class="reviews-section" aria-labelledby="reviews-h">
+  <div class="reviews-ghost" aria-hidden="true">評</div>
+
+  <div class="reviews-header">
+    <p class="section-tag rv" data-i18n="rev.tag">What Players Say</p>
+    <h2 class="sect-hl rv d1" id="reviews-h" data-i18n="rev.h">The Jianghu Speaks</h2>
+  </div>
+
+  <!-- Stats -->
+  <div class="reviews-stats rv d2" role="list">
+    <div class="reviews-stat" role="listitem">
+      <div class="rstat-num">104K+</div>
+      <div class="rstat-label" data-i18n="rev.s1.lbl">Steam Reviews</div>
+      <div class="rstat-sub" data-i18n="rev.s1.sub">All languages combined</div>
+    </div>
+    <div class="reviews-stat" role="listitem">
+      <div class="rstat-num">87%</div>
+      <div class="rstat-label" data-i18n="rev.s2.lbl">Very Positive</div>
+      <div class="rstat-sub" data-i18n="rev.s2.sub">English reviews rating</div>
+    </div>
+    <div class="reviews-stat" role="listitem">
+      <div class="rstat-num">9M+</div>
+      <div class="rstat-label" data-i18n="rev.s3.lbl">Players in 2 Weeks</div>
+      <div class="rstat-sub" data-i18n="rev.s3.sub">PC & PS5 combined</div>
+    </div>
+    <div class="reviews-stat" role="listitem">
+      <div class="rstat-num">#5</div>
+      <div class="rstat-label" data-i18n="rev.s4.lbl">Steam Most Played</div>
+      <div class="rstat-sub" data-i18n="rev.s4.sub">At launch globally</div>
+    </div>
+  </div>
+
+  <!-- Review cards -->
+  <div class="reviews-track-outer">
+    <div class="reviews-track" role="list">
+
+      <article class="review-card rv" role="listitem">
+        <div class="review-stars" aria-label="5 stars"><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg></div>
+        <p class="review-quote" data-i18n="rev.q1">"How can a free game be this expansive? I expected a cash-grab — I got one of the best open worlds I've ever explored."</p>
+        <div class="review-divider" aria-hidden="true"></div>
+        <div class="review-author">
+          <div class="review-avatar" aria-hidden="true">劍</div>
+          <div>
+            <div class="review-name">SteelWanderer_92</div>
+            <div class="review-hours"><span>247</span> <span data-i18n="rev.hours">hrs on record</span></div>
+          </div>
+          <span class="review-steam">Steam ✓</span>
+        </div>
+      </article>
+
+      <article class="review-card rv d1" role="listitem">
+        <div class="review-stars" aria-label="5 stars"><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg></div>
+        <p class="review-quote" data-i18n="rev.q2">"The open world detail rivals Red Dead Redemption 2. That is not a comparison I make lightly. The Jianghu feels genuinely alive."</p>
+        <div class="review-divider" aria-hidden="true"></div>
+        <div class="review-author">
+          <div class="review-avatar" aria-hidden="true">俠</div>
+          <div>
+            <div class="review-name">NightBladeKira</div>
+            <div class="review-hours"><span>189</span> <span data-i18n="rev.hours">hrs on record</span></div>
+          </div>
+          <span class="review-steam">Steam ✓</span>
+        </div>
+      </article>
+
+      <article class="review-card rv d2" role="listitem">
+        <div class="review-stars" aria-label="5 stars"><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg></div>
+        <p class="review-quote" data-i18n="rev.q3">"When I got tired of fighting, I became an architect and healed townsfolk as a doctor. I ran into a bear practicing Tai Chi. This game is something else."</p>
+        <div class="review-divider" aria-hidden="true"></div>
+        <div class="review-author">
+          <div class="review-avatar" aria-hidden="true">道</div>
+          <div>
+            <div class="review-name">CrimsonPetal_XI</div>
+            <div class="review-hours"><span>312</span> <span data-i18n="rev.hours">hrs on record</span></div>
+          </div>
+          <span class="review-steam">Steam ✓</span>
+        </div>
+      </article>
+
+      <article class="review-card rv d1" role="listitem">
+        <div class="review-stars" aria-label="5 stars"><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg></div>
+        <p class="review-quote" data-i18n="rev.q4">"This is literally the best free-to-play game I have ever seen. The combat, the world, the story — it feels like a premium title at zero cost."</p>
+        <div class="review-divider" aria-hidden="true"></div>
+        <div class="review-author">
+          <div class="review-avatar" aria-hidden="true">風</div>
+          <div>
+            <div class="review-name">IronBamboo</div>
+            <div class="review-hours"><span>421</span> <span data-i18n="rev.hours">hrs on record</span></div>
+          </div>
+          <span class="review-steam">Steam ✓</span>
+        </div>
+      </article>
+
+      <article class="review-card rv d2" role="listitem">
+        <div class="review-stars" aria-label="5 stars"><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg></div>
+        <p class="review-quote" data-i18n="rev.q5">"A live service game done right: gameplay and player satisfaction first. I found the game that's right for me as a longtime MMORPG fan. See ya in the Jianghu."</p>
+        <div class="review-divider" aria-hidden="true"></div>
+        <div class="review-author">
+          <div class="review-avatar" aria-hidden="true">江</div>
+          <div>
+            <div class="review-name">GhostOfTheSword</div>
+            <div class="review-hours"><span>178</span> <span data-i18n="rev.hours">hrs on record</span></div>
+          </div>
+          <span class="review-steam">Steam ✓</span>
+        </div>
+      </article>
+
+      <article class="review-card rv d3" role="listitem">
+        <div class="review-stars" aria-label="5 stars"><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.8 3.1.4-2.2 2.2.5 3.1L6 8.1 3.2 9.5l.5-3.1L1.5 4.2l3.1-.4z"/></svg></div>
+        <p class="review-quote" data-i18n="rev.q6">"Give it 2 hours. Don't rush. Immerse yourself. Not many games have pulled off what this game does in so many ways. Better enjoyed with friends."</p>
+        <div class="review-divider" aria-hidden="true"></div>
+        <div class="review-author">
+          <div class="review-avatar" aria-hidden="true">湖</div>
+          <div>
+            <div class="review-name">LotusStrike</div>
+            <div class="review-hours"><span>556</span> <span data-i18n="rev.hours">hrs on record</span></div>
+          </div>
+          <span class="review-steam">Steam ✓</span>
+        </div>
+      </article>
+
+    </div>
+  </div>
+
+
+</section>
+
+<!-- FAQ -->
+<section class="faq-section" aria-labelledby="faq-h">
+  <div class="faq-inner">
+    <div class="faq-header">
+      <p class="section-tag rv" data-i18n="faq.tag">Quick Answers</p>
+      <h2 class="sect-hl rv d1" id="faq-h" data-i18n="faq.h">Before You Step In</h2>
+    </div>
+    <ul class="faq-list rv" aria-label="Frequently asked questions">
+      <li class="faq-item"><button class="faq-q" aria-expanded="false" aria-controls="fa1"><span class="faq-q-t" data-i18n="faq.q1">Is it free to play?</span><span class="faq-plus" aria-hidden="true">+</span></button><div class="faq-a" id="fa1" role="region"><div class="faq-a-in"><p class="faq-a-t" data-i18n="faq.a1">Yes. Where Winds Meet is free to play on PC.</p></div></div></li>
+      <li class="faq-item"><button class="faq-q" aria-expanded="false" aria-controls="fa2"><span class="faq-q-t" data-i18n="faq.q2">What platform?</span><span class="faq-plus" aria-hidden="true">+</span></button><div class="faq-a" id="fa2" role="region"><div class="faq-a-in"><p class="faq-a-t" data-i18n="faq.a2">Available on PC via Steam.</p></div></div></li>
+      <li class="faq-item"><button class="faq-q" aria-expanded="false" aria-controls="fa3"><span class="faq-q-t" data-i18n="faq.q3">Is co-op supported?</span><span class="faq-plus" aria-hidden="true">+</span></button><div class="faq-a" id="fa3" role="region"><div class="faq-a-in"><p class="faq-a-t" data-i18n="faq.a3">Yes — explore solo or with friends.</p></div></div></li>
+      <li class="faq-item"><button class="faq-q" aria-expanded="false" aria-controls="fa4"><span class="faq-q-t" data-i18n="faq.q4">Can I start now?</span><span class="faq-plus" aria-hidden="true">+</span></button><div class="faq-a" id="fa4" role="region"><div class="faq-a-in"><p class="faq-a-t" data-i18n="faq.a4">Right now. Click below.</p></div></div></li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <p class="footer-seal" aria-hidden="true">風 · 俠 · 道</p>
+  <p class="footer-note" data-i18n="footer.note">Unofficial promotional page. Not affiliated with the official developer or publisher. Steam® is a trademark of Valve Corporation. All game assets belong to their respective owners.</p>
+  <div class="footer-links">
+    <button class="footer-link" id="priv-btn" data-i18n="footer.priv">Privacy Policy</button>
+    <button class="footer-link" id="terms-btn" data-i18n="footer.terms">Terms of Use</button>
+  </div>
+</footer>
+
+<div class="sticky" id="sticky" role="complementary" aria-label="Download prompt">
+  <span class="sticky-label" data-i18n="sty.lbl">Where Winds Meet</span>
+  <a href="#" class="sticky-btn" id="sty-cta" data-i18n="sty.cta">Play Free on PC</a>
+</div>
+
+<div class="mbg" id="priv-modal" role="dialog" aria-modal="true" aria-labelledby="pm-t">
+  <div class="mbox"><button class="m-close" id="close-priv" aria-label="Close">✕</button><h3 class="m-title" id="pm-t">PRIVACY POLICY</h3><div class="m-body"><p>This is an unofficial promotional page for Where Winds Meet. We do not collect personal data. Standard browser behavior applies. For the official privacy policy, visit the official Steam page.</p></div></div>
+</div>
+<div class="mbg" id="terms-modal" role="dialog" aria-modal="true" aria-labelledby="tm-t">
+  <div class="mbox"><button class="m-close" id="close-terms" aria-label="Close">✕</button><h3 class="m-title" id="tm-t">TERMS OF USE</h3><div class="m-body"><p>Unofficial promotional page. All game content, trademarks, and assets belong to their respective owners. Not affiliated with or endorsed by the official developer. Steam® is a trademark of Valve Corporation.</p></div></div>
+</div>
+
+<script>
+(function(){'use strict';
+
+/* ── CONFIG ── */
+var CFG={
+  logo:'assets/images/logo.webp',
+  heroVideo:'assets/videos/hero.mp4',
+  heroPoster:'assets/images/hero_poster.webp',
+  ss1:'assets/images/screenshot_1.webp',
+  ss2:'assets/images/screenshot_2.webp',
+  ss3:'assets/images/screenshot_3.webp',
+  trailerVideo:'assets/videos/trailer.mp4',
+  trailerPoster:'assets/images/trailer_poster.webp',
+  ctaUrl:'{{CTA_URL}}'
+};
+function isPH(v){return!v||v.startsWith('{{')||/^[A-Z][A-Z0-9_]+$/.test(v);}
+
+/* ── TRANSLATIONS ── */
+var T={
+  en:{
+    'meta.t':'Where Winds Meet — Enter Jianghu',
+    'game.badge':'Open World Wuxia RPG','game.name':'WHERE WINDS MEET','game.tagline':'10th-Century China · Free to Play · PC',
+    'hero.ey':'Something stirs in the East. It has been waiting for you.','hero.h1':'You Don\'t Know','hero.h2':'Who You Are Yet.',
+    'hero.sub':'An ancient world is watching. Every path leads somewhere no map can show you. Who you become — only the wind will remember.',
+    'hero.cta':'Claim Your Legend — Free','hero.note':'Free to play. The Jianghu asks only one thing: that you enter.',
+    'chip1':'Open World','chip2':'Martial Arts','chip3':'Co-op','chip4':'Ancient China','chip5':'Wuxia RPG',
+    'world.tag':'The Living World','world.h':'Every Wind Carries a Name',
+    'world.desc':'The Jianghu is not a game map. It is a world that breathes. Step into a living 10th-century China — unscripted, untamed, and waiting.',
+    'world.p1':'Fluid Combat','world.p2':'Living World','world.p3':'Cinematic Traversal','world.p4':'Deep Lore','world.p5':'Co-op / Solo',
+    'paths.tag':'Choose Your Path','paths.h':'Who Will You Be?',
+    'paths.c1.n':'The Swordmaster','paths.c1.d':'Perfect every strike. Become untouchable.',
+    'paths.c2.n':'The Wanderer','paths.c2.d':'Follow no map. Write your own legend.',
+    'paths.c3.n':'The Strategist','paths.c3.d':'Win before the fight begins.',
+    'paths.c4.n':'The Builder','paths.c4.d':'Shape towns. Leave your mark.',
+    'paths.c5.n':'The Seeker','paths.c5.d':'Some truths are buried deep.',
+    'wpn.tag':'Master Your Arsenal','wpn.h':'Choose Your Weapon',
+    'wpn.w1.n':'Sword','wpn.w1.d':'Grace and lethality as one. The soul of the Jianghu.',
+    'wpn.w2.n':'Dual Blades','wpn.w2.d':'Two become one. Speed and chaos unleashed.',
+    'wpn.w3.n':'Spear','wpn.w3.d':'Strike before they reach you. Dominate the distance.',
+    'wpn.w4.n':'Mo Blade','wpn.w4.d':'Brute force shaped into brutal art.',
+    'wpn.w5.n':'Rope Dart','wpn.w5.d':'Unpredictable. Untraceable. Unstoppable.',
+    'wpn.w6.n':'Fan','wpn.w6.d':'Beauty conceals the blade. Elegance is deadly.',
+    'wpn.w7.n':'Umbrella','wpn.w7.d':'A shelter and a slaughter — in the same hand.',
+    'gal.tag':'The World Awaits','gal.h':'See the Jianghu',
+    'gal.l1':'The Martial World','gal.l2':'Where the Rain Falls','gal.l3':'Where Legends Are Born','gal.l4':'Ancient Paths','gal.l5':'The Wandering Seeker',
+    'tra.tag':'Official Trailer','tra.h':'Witness the Legend','tra.sub':'Watch the world come alive.','tra.cta':'Enter Jianghu',
+    'rev.tag':'What Players Say','rev.h':'The Jianghu Speaks',
+    'rev.s1.lbl':'Steam Reviews','rev.s1.sub':'All languages combined',
+    'rev.s2.lbl':'Very Positive','rev.s2.sub':'English reviews rating',
+    'rev.s3.lbl':'Players in 2 Weeks','rev.s3.sub':'PC & PS5 combined',
+    'rev.s4.lbl':'Steam Most Played','rev.s4.sub':'At launch globally',
+    'rev.hours':'hrs on record',
+    'rev.q1':'"How can a free game be this expansive? I expected a cash-grab and got one of the best open worlds I have ever explored."',
+    'rev.q2':'"The open world detail rivals Red Dead Redemption 2. The Jianghu feels genuinely alive."',
+    'rev.q3':'"When I got tired of fighting, I became an architect and healed villagers as a doctor. I ran into a bear practicing Tai Chi. This game is something else."',
+    'rev.q4':'"This is literally the best free-to-play game I have ever seen. The combat, the world, the story — premium quality at zero cost."',
+    'rev.q5':'"A live service game done right. Gameplay and player satisfaction come first. I found the game that is right for me. See you in the Jianghu."',
+    'rev.q6':'"Give it 2 hours. Do not rush. Immerse yourself. Better enjoyed with friends."',
+    'rev.link':'Read All 104K+ Reviews on Steam',
+    'sys.tag':'System Requirements','sys.h':'Is Your Blade Ready?','sys.min':'Minimum','sys.rec':'Recommended',
+    'sys.os.lbl':'Operating System','sys.cpu.lbl':'Processor','sys.ram.lbl':'Memory','sys.gpu.lbl':'Graphics',
+    'sys.dx.lbl':'DirectX','sys.net.lbl':'Network','sys.net.val':'Broadband Internet',
+    'sys.sto.lbl':'Storage','sys.sto.avail':'available space','sys.sto.note':'SSD installation recommended for best performance',
+    'sys.footnote':'Requires 64-bit processor and operating system','sys.cta':'Play Free on PC',
+    'faq.tag':'Quick Answers','faq.h':'Before You Step In',
+    'faq.q1':'Is it free to play?','faq.a1':'Yes. Where Winds Meet is free to play on PC.',
+    'faq.q2':'What platform?','faq.a2':'Available on PC via Steam.',
+    'faq.q3':'Is co-op supported?','faq.a3':'Yes — explore solo or with friends.',
+    'faq.q4':'Can I start now?','faq.a4':'Right now. Click below.',
+    'social.rev_label':'Reviews','social.on_steam':'on Steam','social.very_pos':'Very Positive',
+    'social.reviews':'87% Positive Reviews','social.free_num':'Free','social.to_play':'to Play',
+    'social.no_card':'No credit card','social.available':'Available on Steam','social.now':'Play Now — PC',
+    'social.steam_hero':'Available Free on Steam',
+    'sty.lbl':'Where Winds Meet','sty.cta':'Play Free on PC',
+    'footer.note':'Unofficial promotional page. Not affiliated with the official developer. Steam is a trademark of Valve Corporation.',
+    'footer.priv':'Privacy Policy','footer.terms':'Terms of Use'
+  },
+  ko:{
+    'meta.t':'Where Winds Meet — 강호 입문',
+    'game.badge':'오픈 월드 무협 RPG','game.name':'바람이 만나는 곳','game.tagline':'10세기 중국 · 무료 플레이 · PC',
+    'hero.ey':'동방에서 무언가가 깨어나고 있다.','hero.h1':'당신은 아직','hero.h2':'자신이 누구인지 모른다.',
+    'hero.sub':'고대의 세계가 당신을 지켜보고 있다. 모든 길은 어떤 지도도 보여줄 수 없는 곳으로 이어진다.',
+    'hero.cta':'전설을 차지하라 — 무료','hero.note':'무료 플레이. 강호는 단 하나만 요구한다: 들어올 것.',
+    'chip1':'오픈 월드','chip2':'무술','chip3':'협동 플레이','chip4':'고대 중국','chip5':'무협 RPG',
+    'world.tag':'살아 숨쉬는 세계','world.h':'모든 바람에는 이름이 있다',
+    'world.desc':'강호는 게임 지도가 아닙니다. 숨 쉬는 세계입니다. 10세기 중국으로 발을 들이세요.',
+    'world.p1':'유동적인 전투','world.p2':'살아있는 세계','world.p3':'시네마틱 이동','world.p4':'심층 세계관','world.p5':'협동 / 솔로',
+    'paths.tag':'당신의 길을 선택하세요','paths.h':'당신은 누가 될 것인가?',
+    'paths.c1.n':'검의 대가','paths.c1.d':'모든 자세를 완성하라. 무적이 되어라.',
+    'paths.c2.n':'방랑자','paths.c2.d':'지도를 따르지 마라. 전설을 써라.',
+    'paths.c3.n':'전략가','paths.c3.d':'싸움이 시작되기 전에 이겨라.',
+    'paths.c4.n':'건설자','paths.c4.d':'마을을 만들어라. 흔적을 남겨라.',
+    'paths.c5.n':'탐구자','paths.c5.d':'어떤 진실은 깊이 묻혀 있다.',
+    'wpn.tag':'무기를 마스터하라','wpn.h':'무기를 선택하라',
+    'wpn.w1.n':'검','wpn.w1.d':'강호의 혼.','wpn.w2.n':'쌍검','wpn.w2.d':'속도와 혼돈.',
+    'wpn.w3.n':'창','wpn.w3.d':'거리를 지배하라.','wpn.w4.n':'모검','wpn.w4.d':'힘을 예술로.',
+    'wpn.w5.n':'유성추','wpn.w5.d':'예측불가.','wpn.w6.n':'부채','wpn.w6.d':'우아함은 치명적이다.',
+    'wpn.w7.n':'우산','wpn.w7.d':'피난처이자 학살.',
+    'gal.tag':'세계가 기다린다','gal.h':'강호를 보라',
+    'gal.l1':'무협의 세계','gal.l2':'비가 내리는 곳','gal.l3':'전설이 태어나는 곳','gal.l4':'고대의 길','gal.l5':'방랑하는 탐구자',
+    'tra.tag':'공식 트레일러','tra.h':'전설을 목격하라','tra.sub':'세계가 살아 숨쉬는 모습을 보라.','tra.cta':'강호 입문',
+    'rev.tag':'플레이어들의 이야기','rev.h':'강호가 말하다',
+    'rev.s1.lbl':'Steam 리뷰','rev.s1.sub':'전체 언어 합산',
+    'rev.s2.lbl':'매우 긍정적','rev.s2.sub':'영어 리뷰 평가',
+    'rev.s3.lbl':'2주 만에 플레이어','rev.s3.sub':'PC & PS5 합산',
+    'rev.s4.lbl':'Steam 최다 플레이','rev.s4.sub':'글로벌 출시 당시',
+    'rev.hours':'시간 플레이',
+    'rev.q1':'"무료 게임이 이렇게 방대할 수 있나? 역대 최고의 오픈 월드였다."',
+    'rev.q2':'"강호의 디테일은 레드 데드 리뎀션 2에 필적한다. 강호는 정말 살아있다."',
+    'rev.q3':'"전투에 지쳤을 때 건축가가 됐다. 태극권 하는 곰도 만났다. 이 게임은 독특하다."',
+    'rev.q4':'"내가 본 최고의 무료 게임이다. 유료 게임 수준의 퀄리티다."',
+    'rev.q5':'"제대로 된 라이브 서비스 게임. 내게 맞는 게임을 찾았다. 강호에서 만나자."',
+    'rev.q6':'"2시간을 줘라. 서두르지 마라. 친구들과 더욱 즐겁다."',
+    'rev.link':'Steam에서 104K+ 리뷰 전체 읽기',
+    'sys.tag':'시스템 사양','sys.h':'당신의 검은 준비되었나?','sys.min':'최소 사양','sys.rec':'권장 사양',
+    'sys.os.lbl':'운영 체제','sys.cpu.lbl':'프로세서','sys.ram.lbl':'메모리','sys.gpu.lbl':'그래픽',
+    'sys.dx.lbl':'DirectX','sys.net.lbl':'네트워크','sys.net.val':'광대역 인터넷',
+    'sys.sto.lbl':'저장 공간','sys.sto.avail':'여유 공간','sys.sto.note':'SSD 설치를 권장합니다',
+    'sys.footnote':'64비트 프로세서 및 운영 체제 필요','sys.cta':'PC에서 무료 플레이',
+    'faq.tag':'빠른 답변','faq.h':'발을 들이기 전에',
+    'faq.q1':'무료 플레이인가요?','faq.a1':'네. PC에서 무료로 플레이할 수 있습니다.',
+    'faq.q2':'어떤 플랫폼인가요?','faq.a2':'Steam을 통해 PC에서 이용 가능합니다.',
+    'faq.q3':'협동 플레이가 가능한가요?','faq.a3':'네 — 혼자 또는 친구들과 탐험할 수 있습니다.',
+    'faq.q4':'지금 시작할 수 있나요?','faq.a4':'지금 바로. 아래를 클릭하세요.',
+    'social.rev_label':'리뷰','social.on_steam':'Steam 기준','social.very_pos':'매우 긍정적',
+    'social.reviews':'87% 긍정적 리뷰','social.free_num':'무료','social.to_play':'플레이',
+    'social.no_card':'신용카드 불필요','social.available':'Steam에서 이용 가능','social.now':'지금 플레이 — PC',
+    'social.steam_hero':'Steam에서 무료 이용 가능',
+    'sty.lbl':'바람이 만나는 곳','sty.cta':'PC에서 무료 플레이',
+    'footer.note':'비공식 홍보 페이지입니다. Steam은 Valve Corporation의 상표입니다.',
+    'footer.priv':'개인정보 처리방침','footer.terms':'이용약관'
+  },
+  ja:{
+    'meta.t':'Where Winds Meet — 江湖へ踏み込め',
+    'game.badge':'オープンワールド武侠RPG','game.name':'Where Winds Meet','game.tagline':'10世紀の中国 · 無料プレイ · PC',
+    'hero.ey':'東から何かが目覚めつつある。','hero.h1':'お前はまだ','hero.h2':'自分が誰かを知らない。',
+    'hero.sub':'古の世界がお前を見ている。すべての道は地図にない場所へ続く。',
+    'hero.cta':'伝説を掴め — 無料','hero.note':'無料プレイ。江湖はただ一つだけを求める：踏み込むこと。',
+    'chip1':'オープンワールド','chip2':'武術','chip3':'協力プレイ','chip4':'古代中国','chip5':'武侠RPG',
+    'world.tag':'生きた世界','world.h':'すべての風に名がある',
+    'world.desc':'江湖はゲームマップではない。息吹く世界だ。10世紀の中国へ踏み込め。',
+    'world.p1':'流体戦闘','world.p2':'生きた世界','world.p3':'映像的移動','world.p4':'深い伝承','world.p5':'協力 / ソロ',
+    'paths.tag':'道を選べ','paths.h':'あなたは何者になる？',
+    'paths.c1.n':'剣の達人','paths.c1.d':'あらゆる一刀を極め、無敵となれ。',
+    'paths.c2.n':'放浪者','paths.c2.d':'地図に従うな。伝説を刻め。',
+    'paths.c3.n':'策士','paths.c3.d':'戦う前に勝て。',
+    'paths.c4.n':'建設者','paths.c4.d':'街を築き、爪痕を残せ。',
+    'paths.c5.n':'探求者','paths.c5.d':'深く埋もれた真実がある。',
+    'wpn.tag':'武器を極めよ','wpn.h':'武器を選べ',
+    'wpn.w1.n':'剣','wpn.w1.d':'江湖の魂。','wpn.w2.n':'双剣','wpn.w2.d':'速度と混沌。',
+    'wpn.w3.n':'槍','wpn.w3.d':'距離を制圧せよ。','wpn.w4.n':'莫刀','wpn.w4.d':'力を芸術へ。',
+    'wpn.w5.n':'流星錘','wpn.w5.d':'予測不能。','wpn.w6.n':'扇','wpn.w6.d':'優雅さは致命的だ。',
+    'wpn.w7.n':'傘','wpn.w7.d':'避難所と殺戮が宿る。',
+    'gal.tag':'世界が待つ','gal.h':'江湖を見よ',
+    'gal.l1':'武侠の世界','gal.l2':'雨が降る場所','gal.l3':'伝説が生まれる場所','gal.l4':'古の道','gal.l5':'さすらいの探求者',
+    'tra.tag':'公式トレーラー','tra.h':'伝説を目撃せよ','tra.sub':'世界が息吹く瞬間を見よ。','tra.cta':'江湖へ進む',
+    'rev.tag':'プレイヤーの声','rev.h':'江湖が語る',
+    'rev.s1.lbl':'Steamレビュー','rev.s1.sub':'全言語合計',
+    'rev.s2.lbl':'非常に好評','rev.s2.sub':'英語レビュー評価',
+    'rev.s3.lbl':'2週間でのプレイヤー数','rev.s3.sub':'PC & PS5合算',
+    'rev.s4.lbl':'Steam最多プレイ','rev.s4.sub':'グローバル発売時',
+    'rev.hours':'時間プレイ済み',
+    'rev.q1':'"無料ゲームがこれほど広大なはずがない。史上最高のオープンワールドだった。"',
+    'rev.q2':'"江湖の細部はRDR2に匹敵する。江湖は本当に生きている。"',
+    'rev.q3':'"戦闘に飽きたとき建築家になり村人を治療した。太極拳の熊にも会った。このゲームは別格だ。"',
+    'rev.q4':'"今まで見た最高の無料ゲームだ。有料タイトルのような品質だ。"',
+    'rev.q5':'"正しいライブサービスゲーム。自分にぴったりのゲームを見つけた。江湖で会おう。"',
+    'rev.q6':'"2時間与えろ。急ぐな。没入せよ。友達と一緒がさらに良い。"',
+    'rev.link':'Steamで104K+レビューを全て読む',
+    'sys.tag':'動作環境','sys.h':'あなたの刃は準備できているか？','sys.min':'最低要件','sys.rec':'推奨要件',
+    'sys.os.lbl':'OS','sys.cpu.lbl':'プロセッサ','sys.ram.lbl':'メモリ','sys.gpu.lbl':'グラフィック',
+    'sys.dx.lbl':'DirectX','sys.net.lbl':'ネットワーク','sys.net.val':'ブロードバンド接続',
+    'sys.sto.lbl':'ストレージ','sys.sto.avail':'空き容量','sys.sto.note':'SSDへのインストールを推奨',
+    'sys.footnote':'64ビットプロセッサとOSが必要','sys.cta':'PCで無料プレイ',
+    'faq.tag':'よくある質問','faq.h':'踏み込む前に',
+    'faq.q1':'無料でプレイできますか？','faq.a1':'はい。PCで無料プレイできます。',
+    'faq.q2':'どのプラットフォームですか？','faq.a2':'Steam経由でPCにて利用可能です。',
+    'faq.q3':'協力プレイはできますか？','faq.a3':'はい — 一人でも友達とでも探索できます。',
+    'faq.q4':'今すぐ始められますか？','faq.a4':'今すぐ。以下をクリックして始めましょう。',
+    'social.rev_label':'レビュー','social.on_steam':'Steam基準','social.very_pos':'非常に好評',
+    'social.reviews':'87%のポジティブレビュー','social.free_num':'無料','social.to_play':'プレイ',
+    'social.no_card':'クレジットカード不要','social.available':'Steamで利用可能','social.now':'今すぐプレイ — PC',
+    'social.steam_hero':'Steamで無料プレイ',
+    'sty.lbl':'Where Winds Meet','sty.cta':'PCで無料プレイ',
+    'footer.note':'非公式プロモーションページです。Steam はValve Corporationの商標です。',
+    'footer.priv':'プライバシーポリシー','footer.terms':'利用規約'
+  }
+};
+
+/* ── LANGUAGE ── */
+var lang='en';
+function detectLang(){
+  try{
+    var u=new URLSearchParams(location.search).get('lang');
+    if(u&&T[u])return u;
+    var s=localStorage.getItem('wwm_lang');
+    if(s&&T[s])return s;
+  }catch(e){}
+  var b=(navigator.language||'').toLowerCase();
+  if(b.startsWith('ko'))return'ko';
+  if(b.startsWith('ja'))return'ja';
+  return'en';
+}
+function setLang(l,push){
+  if(!T[l])l='en';
+  lang=l;
+  document.documentElement.lang=l;
+  document.documentElement.className=document.documentElement.className.replace(/\blang-\S+/g,'').trim();
+  document.documentElement.classList.add('lang-'+l);
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var k=el.dataset.i18n;
+    var v=T[l][k];
+    if(v===undefined)return;
+    // Use innerHTML for review quotes to preserve special characters
+    if(k.indexOf('rev.q')===0){
+      el.innerHTML=v;
+    } else {
+      el.textContent=v;
+    }
+  });
+  document.title=T[l]['meta.t']||T.en['meta.t'];
+  document.querySelectorAll('.lb').forEach(function(b){
+    var on=b.dataset.lang===l;
+    b.classList.toggle('on',on);
+    b.setAttribute('aria-pressed',String(on));
+  });
+  if(push){
+    try{
+      var u=new URL(location.href);
+      u.searchParams.set('lang',l);
+      history.pushState({lang:l},'',u.toString());
+      localStorage.setItem('wwm_lang',l);
+    }catch(e){}
+  }
+}
+document.querySelectorAll('.lb').forEach(function(b){
+  b.addEventListener('click',function(){setLang(b.dataset.lang,true);});
+});
+window.addEventListener('popstate',function(){
+  setLang(new URLSearchParams(location.search).get('lang')||'en',false);
+});
+
+/* ── ASSETS ── */
+function loadAssets(){
+  var url=isPH(CFG.ctaUrl)?'#':CFG.ctaUrl;
+  ['hero-cta','tra-cta','sty-cta','sysreq-cta'].forEach(function(id){
+    var el=document.getElementById(id);if(el)el.href=url;
+  });
+  if(!isPH(CFG.logo)){
+    var li=document.getElementById('nav-logo');
+    if(li){li.src=CFG.logo;li.style.display='';document.getElementById('nav-word').style.display='none';}
+  }
+  // Gallery images
+  var galSrcs=[CFG.ss1,CFG.ss2,CFG.ss3,
+    'assets/images/screenshot_4.webp',
+    'assets/images/screenshot_5.webp'];
+  document.querySelectorAll('.gallery-grid .g-img').forEach(function(img,i){
+    if(galSrcs[i]&&!isPH(galSrcs[i]))img.src=galSrcs[i];
+  });
+  // Weapon images
+  var wpnSrcs=[
+    'assets/images/sword.webp','assets/images/dual_blades.webp',
+    'assets/images/spear.webp','assets/images/mo_blade.webp',
+    'assets/images/rope_dart.webp','assets/images/fan.webp','assets/images/umbrella.webp'
+  ];
+  document.querySelectorAll('.w-img').forEach(function(img,i){
+    if(wpnSrcs[i])img.src=wpnSrcs[i];
+  });
+  // Scroll card images
+  var scrollSrcs=[
+    'assets/images/screenshot_3.webp','assets/images/screenshot_1.webp',
+    'assets/images/screenshot_2.webp','assets/images/screenshot_4.webp',
+    'assets/images/screenshot_5.webp'
+  ];
+  document.querySelectorAll('.scroll-img').forEach(function(img,i){
+    if(scrollSrcs[i])img.src=scrollSrcs[i];
+  });
+  // World section background
+  var wb=document.querySelector('.world-art-bg');
+  if(wb){
+    wb.style.backgroundImage='url(assets/images/screenshot_5.webp)';
+    wb.style.backgroundSize='cover';
+    wb.style.backgroundPosition='center 40%';
+  }
+  // Trailer thumbnail
+  var tph=document.getElementById('t-ph');
+  if(tph){
+    var timg=tph.querySelector('img');
+    if(timg)timg.src='assets/images/screenshot_3.webp';
+  }
+}
+
+/* ── HERO VIDEO ── */
+function initHeroVideo(){
+  var hv=document.getElementById('hero-video');
+  var poster=document.getElementById('hero-poster');
+  var replay=document.getElementById('hero-replay');
+  var muteBtn=document.getElementById('hero-mute-btn');
+  var iconOn=document.getElementById('icon-sound-on');
+  var iconOff=document.getElementById('icon-sound-off');
+  if(!hv)return;
+
+  function hideMountains(){
+    ['hw-sky','hw-sun','hw-m1','hw-m2','hw-m3','hw-m4','hw-m5','hw-mist','hw-mist2'].forEach(function(c){
+      var el=document.querySelector('.'+c);
+      if(el){el.style.transition='opacity 1.2s ease';el.style.opacity='0';}
+    });
+  }
+  function showVideo(){
+    hv.style.opacity='1';
+    hideMountains();
+  }
+
+  // Set poster
+  if(poster){
+    poster.src='assets/images/hero_poster.webp';
+  }
+  hv.poster='assets/images/hero_poster.webp';
+
+  // Autoplay with sound
+  hv.muted=false;
+  hv.volume=0.8;
+  var p=hv.play();
+  if(p){
+    p.then(showVideo).catch(function(){
+      hv.muted=true;
+      if(iconOn)iconOn.style.display='none';
+      if(iconOff)iconOff.style.display='';
+      if(muteBtn)muteBtn.setAttribute('aria-label','Unmute video');
+      hv.play().then(showVideo).catch(function(){
+        hv.style.opacity='1';
+        hideMountains();
+      });
+    });
+  }
+  if(hv.readyState>=2)showVideo();
+  else{
+    hv.addEventListener('canplay',showVideo,{once:true});
+    hv.addEventListener('loadeddata',showVideo,{once:true});
+  }
+
+  // On end: show poster + replay
+  hv.addEventListener('ended',function(){
+    hv.style.transition='opacity .6s ease';
+    hv.style.opacity='0';
+    setTimeout(function(){
+      hv.style.display='none';
+      if(poster){
+        poster.style.display='block';
+        poster.style.opacity='0';
+        poster.style.transition='opacity .8s ease';
+        requestAnimationFrame(function(){
+          requestAnimationFrame(function(){poster.style.opacity='1';});
+        });
+      }
+      if(replay){
+        replay.classList.add('show');
+        // Ensure replay is clickable by briefly disabling hero-content pointer events
+        var hc=document.querySelector('.hero-content');
+        if(hc)hc.style.pointerEvents='none';
+      }
+    },600);
+  });
+
+  // Replay
+  if(replay){
+    replay.addEventListener('click',function(){
+      replay.classList.remove('show');
+      var hc=document.querySelector('.hero-content');
+      if(hc)hc.style.pointerEvents='';
+      if(poster){
+        poster.style.transition='opacity .3s ease';
+        poster.style.opacity='0';
+        setTimeout(function(){poster.style.display='none';},300);
+      }
+      hv.style.display='';
+      hv.style.opacity='0';
+      hv.style.transition='opacity .8s ease';
+      hv.currentTime=0;
+      setTimeout(function(){
+        hv.style.opacity='1';
+        hv.play().catch(function(){});
+      },50);
+    });
+    replay.addEventListener('keydown',function(e){
+      if(e.key==='Enter'||e.key===' '){e.preventDefault();replay.click();}
+    });
+  }
+
+  // Mute toggle
+  if(muteBtn){
+    muteBtn.addEventListener('click',function(){
+      hv.muted=!hv.muted;
+      if(iconOn)iconOn.style.display=hv.muted?'none':'';
+      if(iconOff)iconOff.style.display=hv.muted?'':'none';
+      muteBtn.setAttribute('aria-label',hv.muted?'Unmute video':'Mute video');
+    });
+  }
+}
+
+/* ── EMBERS ── */
+function spawnEmbers(){
+  var c=document.getElementById('embers');if(!c)return;
+  for(var i=0;i<20;i++){
+    var e=document.createElement('div');e.className='em';
+    var sz=.8+Math.random()*1.8;
+    e.style.cssText=['left:'+(Math.random()*100)+'%','bottom:'+(Math.random()*20)+'%',
+      'width:'+sz+'px','height:'+sz+'px',
+      '--d:'+(7+Math.random()*10)+'s','--dl:'+(-Math.random()*14)+'s',
+      '--dx:'+((Math.random()-.5)*60)+'px','--op:'+(0.1+Math.random()*.2)].join(';');
+    c.appendChild(e);
+  }
+}
+
+/* ── CURSOR ── */
+function initCursor(){
+  if(window.matchMedia('(pointer:coarse)').matches){
+    var cur=document.getElementById('cursor');
+    var ring=document.getElementById('cursor-ring');
+    if(cur)cur.style.display='none';
+    if(ring)ring.style.display='none';
+    document.body.style.cursor='auto';
+    document.querySelectorAll('a,button').forEach(function(el){el.style.cursor='auto';});
+    return;
+  }
+  var cur=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+  var mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',function(e){
+    mx=e.clientX;my=e.clientY;
+    cur.style.left=mx+'px';cur.style.top=my+'px';
+  });
+  (function anim(){
+    rx+=(mx-rx)*.16;ry+=(my-ry)*.16;
+    ring.style.left=rx+'px';ring.style.top=ry+'px';
+    requestAnimationFrame(anim);
+  })();
+}
+
+/* ── REVEAL ── */
+function initReveal(){
+  if(!window.IntersectionObserver)return;
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add('show');obs.unobserve(e.target);}
+    });
+  },{threshold:.07,rootMargin:'0px 0px -20px 0px'});
+  document.querySelectorAll('.rv').forEach(function(el){obs.observe(el);});
+}
+
+/* ── NAV ── */
+function initNav(){
+  var nav=document.getElementById('nav');
+  function up(){nav.classList.toggle('solid',scrollY>55);}
+  addEventListener('scroll',up,{passive:true});up();
+}
+
+/* ── STICKY ── */
+function initSticky(){
+  var s=document.getElementById('sticky'),h=document.getElementById('hero');
+  if(!window.IntersectionObserver||!h)return;
+  new IntersectionObserver(function(entries){
+    s.classList.toggle('on',!entries[0].isIntersecting);
+  },{threshold:0}).observe(h);
+}
+
+/* ── FAQ ── */
+function initFaq(){
+  document.querySelectorAll('.faq-q').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var open=this.getAttribute('aria-expanded')==='true';
+      document.querySelectorAll('.faq-q').forEach(function(b){
+        b.setAttribute('aria-expanded','false');
+        document.getElementById(b.getAttribute('aria-controls')).classList.remove('open');
+      });
+      if(!open){
+        this.setAttribute('aria-expanded','true');
+        document.getElementById(this.getAttribute('aria-controls')).classList.add('open');
+      }
+    });
+  });
+}
+
+/* ── TRAILER ── */
+function initTrailer(){
+  var btn=document.getElementById('play-btn');
+  var tv=document.getElementById('t-video');
+  var ph=document.getElementById('t-ph');
+  var iconPlay=document.getElementById('icon-play');
+  var iconPause=document.getElementById('icon-pause');
+  if(!btn||!tv)return;
+  var player=tv.closest('.t-player')||tv.parentElement;
+
+  function setPlaying(playing){
+    if(iconPlay)iconPlay.style.display=playing?'none':'';
+    if(iconPause)iconPause.style.display=playing?'':'none';
+    btn.setAttribute('aria-label',playing?'Pause trailer':'Play official trailer');
+    btn.dataset.state=playing?'playing':'paused';
+    btn.style.opacity='';
+    btn.style.pointerEvents='';
+    btn.style.animationPlayState=playing?'paused':'running';
+    if(player)player.classList.toggle('is-playing',playing);
+  }
+
+  btn.addEventListener('click',function(){
+    var isPlaying=btn.dataset.state==='playing';
+    if(isPlaying){
+      tv.pause();setPlaying(false);
+    } else {
+      tv.style.display='block';
+      tv.style.opacity='0';
+      tv.style.transition='opacity .8s ease';
+      if(ph){ph.style.transition='opacity .6s ease';ph.style.opacity='0';}
+      var p=tv.play();
+      if(p){
+        p.then(function(){
+          tv.style.opacity='1';
+          setPlaying(true);
+          setTimeout(function(){if(ph)ph.style.display='none';},600);
+        }).catch(function(){setPlaying(false);});
+      } else {
+        tv.style.opacity='1';
+        setPlaying(true);
+        if(ph)ph.style.display='none';
+      }
+    }
+  });
+  tv.addEventListener('click',function(){btn.click();});
+  tv.addEventListener('ended',function(){
+    setPlaying(false);
+    tv.style.transition='opacity .5s ease';
+    tv.style.opacity='0';
+    setTimeout(function(){
+      tv.style.display='none';
+      if(ph){ph.style.display='';ph.style.opacity='0';
+        requestAnimationFrame(function(){ph.style.transition='opacity .5s ease';ph.style.opacity='1';});
+      }
+    },500);
+  });
+}
+
+/* ── PARALLAX ── */
+function initParallax(){
+  if(window.matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  var items=[{s:'.hw-m1',r:.06},{s:'.hw-m2',r:.1},{s:'.hw-m3',r:.14},{s:'.hw-sun',r:.04},{s:'.hw-mist',r:.08}];
+  var els=items.map(function(it){return{el:document.querySelector(it.s),r:it.r};});
+  var tick=false;
+  addEventListener('scroll',function(){
+    if(!tick){requestAnimationFrame(function(){
+      var y=scrollY;
+      els.forEach(function(it){if(it.el)it.el.style.transform='translateY('+(y*it.r)+'px)';});
+      tick=false;
+    });tick=true;}
+  },{passive:true});
+}
+
+/* ── MODALS ── */
+function initModals(){
+  function open(id){document.getElementById(id).classList.add('open');}
+  function close(id){document.getElementById(id).classList.remove('open');}
+  var pb=document.getElementById('priv-btn');
+  var tb=document.getElementById('terms-btn');
+  var cp=document.getElementById('close-priv');
+  var ct=document.getElementById('close-terms');
+  if(pb)pb.addEventListener('click',function(){open('priv-modal');});
+  if(tb)tb.addEventListener('click',function(){open('terms-modal');});
+  if(cp)cp.addEventListener('click',function(){close('priv-modal');});
+  if(ct)ct.addEventListener('click',function(){close('terms-modal');});
+  document.querySelectorAll('.mbg').forEach(function(m){
+    m.addEventListener('click',function(e){if(e.target===m)m.classList.remove('open');});
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape')document.querySelectorAll('.mbg.open').forEach(function(m){m.classList.remove('open');});
+  });
+}
+
+/* ── WEAPONS CAROUSEL ── */
+function initWeapons(){
+  var track=document.getElementById('weapons-track');
+  var dots=document.querySelectorAll('.w-dot');
+  var cards=document.querySelectorAll('.w-card');
+  if(!track)return;
+  var page=0;
+  function getPerPage(){
+    if(window.innerWidth<=400)return 1;
+    if(window.innerWidth<=768)return 2;
+    return 3;
+  }
+  function goTo(p){
+    var perPage=getPerPage();
+    var total=cards.length;
+    var pages=Math.ceil(total/perPage);
+    p=Math.max(0,Math.min(p,pages-1));
+    page=p;
+    track.style.transform='translateX(-'+(p*(100/perPage)*perPage)+'%)';
+    dots.forEach(function(d,i){
+      d.classList.toggle('on',i===p);
+      d.setAttribute('aria-selected',String(i===p));
+    });
+    cards.forEach(function(c,i){
+      c.classList.toggle('active',i>=p*perPage&&i<(p+1)*perPage);
+    });
+  }
+  var wp=document.getElementById('w-prev');
+  var wn=document.getElementById('w-next');
+  if(wp)wp.addEventListener('click',function(){goTo(page-1);});
+  if(wn)wn.addEventListener('click',function(){goTo(page+1);});
+  dots.forEach(function(d){
+    d.addEventListener('click',function(){goTo(parseInt(d.dataset.page));});
+  });
+  cards.forEach(function(c){
+    c.addEventListener('click',function(){
+      cards.forEach(function(x){x.classList.remove('active');});
+      c.classList.add('active');
+    });
+  });
+  var sx=0;
+  track.addEventListener('touchstart',function(e){sx=e.touches[0].clientX;},{passive:true});
+  track.addEventListener('touchend',function(e){
+    var dx=e.changedTouches[0].clientX-sx;
+    if(Math.abs(dx)>40)goTo(dx<0?page+1:page-1);
+  },{passive:true});
+  window.addEventListener('resize',function(){goTo(page);});
+  goTo(0);
+}
+
+/* ── SYSREQ TOGGLE ── */
+function initSysreq(){
+  var btnMin=document.getElementById('btn-min');
+  var btnRec=document.getElementById('btn-rec');
+  var pMin=document.getElementById('panel-min');
+  var pRec=document.getElementById('panel-rec');
+  if(!btnMin)return;
+  function activate(panel,btn,other,otherBtn){
+    panel.classList.add('active');other.classList.remove('active');
+    btn.classList.add('active');btn.setAttribute('aria-pressed','true');
+    otherBtn.classList.remove('active');otherBtn.setAttribute('aria-pressed','false');
+    panel.querySelectorAll('.rv:not(.show)').forEach(function(el){
+      setTimeout(function(){el.classList.add('show');},30);
+    });
+  }
+  btnMin.addEventListener('click',function(){activate(pMin,btnMin,pRec,btnRec);});
+  btnRec.addEventListener('click',function(){activate(pRec,btnRec,pMin,btnMin);});
+}
+
+/* ── INIT ── */
+function init(){
+  setLang(detectLang());
+  loadAssets();
+  initHeroVideo();
+  spawnEmbers();
+  initCursor();
+  initReveal();
+  initNav();
+  initSticky();
+  initFaq();
+  initTrailer();
+  initParallax();
+  initModals();
+  initWeapons();
+  initSysreq();
+  requestAnimationFrame(function(){
+    document.querySelectorAll('.hero .rv').forEach(function(el){el.classList.add('show');});
+  });
+}
+document.readyState==='loading'
+  ?document.addEventListener('DOMContentLoaded',init)
+  :init();
+
+})();
+</script>
+</body>
+</html>
