@@ -23,13 +23,12 @@
     content="An epic open-world wuxia action RPG set in ancient China. Master the blade. Shape your destiny.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Critical fonts (above-the-fold): load immediately -->
   <link rel="preload"
-    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Serif+SC:wght@300;400;700&family=Noto+Serif+KR:wght@300;400;700&family=Noto+Serif+JP:wght@300;400;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap"
     as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Serif+SC:wght@300;400;700&family=Noto+Serif+KR:wght@300;400;700&family=Noto+Serif+JP:wght@300;400;700&display=swap"
-      rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
   </noscript>
   <style>
     *,
@@ -399,7 +398,7 @@
       height: 100%;
       object-fit: cover;
       z-index: 0;
-      display: none
+      display: block
     }
 
     .hero-video {
@@ -410,7 +409,8 @@
       object-fit: cover;
       z-index: 1;
       opacity: 0;
-      transition: opacity 1.4s ease
+      transition: opacity 1.4s ease;
+      will-change: opacity
     }
 
     .hero-veil {
@@ -649,41 +649,6 @@
       }
     }
 
-    }
-
-    .cta-icon {
-      width: 18px;
-      height: 18px;
-      flex-shrink: 0;
-      opacity: .95
-    }
-
-    .cta::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(105deg, transparent 30%, rgba(255, 255, 255, .28) 50%, transparent 70%);
-      transform: translateX(-130%);
-      transition: transform .7s ease
-    }
-
-    .cta::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 10%;
-      right: 10%;
-      height: 1px;
-      background: rgba(255, 255, 255, .35)
-    }
-
-    .cta:hover::before {
-      transform: translateX(130%)
-    }
-
-    .cta:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 0 0 1px rgba(255, 224, 128, .7), 0 8px 40px rgba(200, 148, 58, .5), 0 2px 0 rgba(255, 255, 255, .15), inset 0 1px 0 rgba(255, 255, 255, .35)
     }
 
     .cta:focus-visible {
@@ -3466,33 +3431,7 @@
       letter-spacing: .06em
     }
 
-    /* Floating particles around final CTA */
-    .final-cta-dots {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      overflow: hidden
-    }
 
-    .final-cta-dot {
-      position: absolute;
-      border-radius: 50%;
-      background: rgba(200, 148, 58, .35);
-      animation: float-dot 6s ease-in-out infinite
-    }
-
-    @keyframes float-dot {
-
-      0%,
-      100% {
-        transform: translateY(0) scale(1);
-        opacity: .3
-      }
-
-      50% {
-        transform: translateY(-20px) scale(1.2);
-        opacity: .6
-      }
     }
 
     @media(max-width:768px) {
@@ -3953,6 +3892,19 @@
   <!-- Preload LCP images -->
   <link rel="preload" as="image" href="assets/images/hero_poster.webp" fetchpriority="high">
   <link rel="preload" as="image" href="assets/images/screenshot_1.webp" fetchpriority="low">
+  <style>
+    /* Performance: defer rendering of off-screen sections */
+    .world-section,
+    .paths-section,
+    .gallery-section,
+    .reviews-section,
+    .sysreq-section,
+    .faq-section,
+    .final-cta-section {
+      content-visibility: auto;
+      contain-intrinsic-size: 0 600px;
+    }
+  </style>
 </head>
 
 <body>
@@ -3996,10 +3948,11 @@
       <div class="hw-m5"></div>
       <div class="hw-mist"></div>
       <div class="hw-mist2"></div>
-      <img class="hero-poster" id="hero-poster" alt="">
+      <img class="hero-poster" id="hero-poster" src="assets/images/hero_poster.webp" alt="" decoding="async" fetchpriority="high">
       <video class="hero-video" id="hero-video"
         src="https://res.cloudinary.com/dcc17awcl/video/upload/v1773723566/hero_sx3hiw_ed7f41.mp4" autoplay playsinline
-        poster="assets/images/hero_poster.webp" preload="auto">
+        muted
+        poster="assets/images/hero_poster.webp" preload="metadata">
       </video>
     </div>
     <div class="hero-vtext-l" aria-hidden="true">武俠</div>
@@ -4041,11 +3994,7 @@
     <div class="hero-content">
       <!-- GAME TITLE IDENTITY -->
       <div class="game-title-wrap rv">
-        <div class="game-title-deco">
-          <div class="game-title-line"></div>
-          <span class="game-title-badge" data-i18n="game.badge">Open World Wuxia RPG</span>
-          <div class="game-title-line right"></div>
-        </div>
+
         <img id="hero-logo" src="" alt="Where Winds Meet"
           style="height:clamp(40px,6vw,72px);width:auto;display:none;object-fit:contain;filter:brightness(0) invert(1);opacity:.9;margin-bottom:4px">
         <div class="game-title" id="game-title-text" data-i18n="game.name">WHERE WINDS MEET</div>
@@ -4055,8 +4004,7 @@
         <span data-i18n="hero.h1">A World With No Rules.</span>
         <span class="hero-hl-stroke" data-i18n="hero.h2">Except the Ones You Write.</span>
       </h1>
-      <p class="hero-sub rv d2" data-i18n="hero.sub">An ancient world is watching. Every path leads somewhere no map can
-        show you. Who you become — only the wind will remember.</p>
+      <p class="hero-sub rv d2" data-i18n="hero.sub">Step into 10th-century China — a vast open world where you master martial arts, forge alliances, and carve your own legend. No two paths are the same.</p>
       <div class="hero-acts rv d3" style="flex-wrap:wrap;gap:14px;align-items:center">
         <a href="https://to.wendiro.com/u?k=9db47141846349488810b469b5a18a32&via=16314" class="cta" id="hero-cta"
           data-i18n="hero.cta" aria-label="Play Where Winds Meet on PC">
@@ -4073,9 +4021,8 @@
           </span>
         </a>
       </div>
-      <p class="hero-note rv d3" data-i18n="hero.note">Free to play. The Jianghu asks only one thing: that you enter.
-      </p>
-      <div class="chips rv d4" role="list" aria-label="Game features" style="margin-top:auto;padding-top:32px">
+      <p class="hero-note rv d3" data-i18n="hero.note">Free to play · No credit card · Available now on PC via Steam</p>
+      <div class="chips rv d4" role="list" aria-label="Game features" style="padding-top:32px">
         <span class="chip" role="listitem" data-i18n="chip1">Open World</span>
         <span class="chip" role="listitem" data-i18n="chip2">Martial Arts</span>
         <span class="chip" role="listitem" data-i18n="chip3">Co-op</span>
@@ -5063,18 +5010,7 @@
     <section class="final-cta-section" aria-labelledby="final-cta-h">
       <div class="final-cta-ghost" aria-hidden="true">入</div>
       <div class="final-cta-line-bot" aria-hidden="true"></div>
-      <div class="final-cta-dots" aria-hidden="true">
-        <div class="final-cta-dot"
-          style="width:6px;height:6px;top:20%;left:15%;animation-delay:0s;animation-duration:7s"></div>
-        <div class="final-cta-dot"
-          style="width:4px;height:4px;top:70%;left:25%;animation-delay:1s;animation-duration:5s"></div>
-        <div class="final-cta-dot"
-          style="width:8px;height:8px;top:30%;right:18%;animation-delay:2s;animation-duration:8s"></div>
-        <div class="final-cta-dot"
-          style="width:3px;height:3px;top:60%;right:12%;animation-delay:.5s;animation-duration:6s"></div>
-        <div class="final-cta-dot"
-          style="width:5px;height:5px;top:80%;left:50%;animation-delay:3s;animation-duration:7s"></div>
-      </div>
+
       <div class="final-cta-inner">
         <p class="final-cta-pre rv" data-i18n="fcta.pre">The Jianghu has been waiting.</p>
         <h2 class="final-cta-h rv d1" id="final-cta-h" data-i18n="fcta.h">Your Story<br>Starts Now.</h2>
@@ -5183,8 +5119,8 @@
             'meta.t': 'Where Winds Meet — Enter Jianghu',
             'game.badge': 'Open World Wuxia RPG', 'game.name': 'WHERE WINDS MEET', 'game.tagline': '10th-Century China · Free to Play · PC',
             'hero.ey': 'Every blade has a story. Write yours.', 'hero.h1': 'A World With No Rules.', 'hero.h2': 'Except the Ones You Write.',
-            'hero.sub': 'An ancient world is watching. Every path leads somewhere no map can show you. Who you become — only the wind will remember.',
-            'hero.cta': 'Claim Your Legend — Free', 'hero.note': 'Free to play. The Jianghu asks only one thing: that you enter.',
+            'hero.sub': 'Step into 10th-century China — a vast open world where you master martial arts, forge alliances, and carve your own legend. No two paths are the same.',
+            'hero.cta': 'Claim Your Legend — Free', 'hero.note': 'Free to play · No credit card · Available now on PC via Steam',
             'chip1': 'Open World', 'chip2': 'Martial Arts', 'chip3': 'Co-op', 'chip4': 'Ancient China', 'chip5': 'Wuxia RPG',
             'world.tag': 'The Living World', 'world.h': 'Every Wind Carries a Name',
             'world.desc': 'The Jianghu is not a game map. It is a world that breathes. Step into a living 10th-century China — unscripted, untamed, and waiting.',
@@ -5717,7 +5653,8 @@
             hideMountains();
           }
           if (poster) {
-            poster.src = 'assets/images/hero_poster.webp';
+            // src already set in HTML for faster LCP — no need to reassign
+            poster.style.display = 'block';
           }
           hv.poster = 'assets/images/hero_poster.webp';
           hv.muted = false;
@@ -5794,16 +5731,7 @@
         }
         /* ── EMBERS ── */
         function spawnEmbers() {
-          var c = document.getElementById('embers'); if (!c) return;
-          for (var i = 0; i < 20; i++) {
-            var e = document.createElement('div'); e.className = 'em';
-            var sz = .8 + Math.random() * 1.8;
-            e.style.cssText = ['left:' + (Math.random() * 100) + '%', 'bottom:' + (Math.random() * 20) + '%',
-            'width:' + sz + 'px', 'height:' + sz + 'px',
-            '--d:' + (7 + Math.random() * 10) + 's', '--dl:' + (-Math.random() * 14) + 's',
-            '--dx:' + ((Math.random() - .5) * 60) + 'px', '--op:' + (0.1 + Math.random() * .2)].join(';');
-            c.appendChild(e);
-          }
+          return; // Disabled to improve performance (lighter page)
         }
         /* ── CURSOR ── */
         function initCursor() {
@@ -6197,6 +6125,13 @@
           requestAnimationFrame(function () {
             document.querySelectorAll('.hero .rv').forEach(function (el) { el.classList.add('show'); });
           });
+          // Defer heavy Noto fonts (CJK) until after page load — saves ~200ms on LCP
+          window.addEventListener('load', function () {
+            var noto = document.createElement('link');
+            noto.rel = 'stylesheet';
+            noto.href = 'https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Serif+KR:wght@300;400;700&family=Noto+Serif+JP:wght@300;400;700&display=swap';
+            document.head.appendChild(noto);
+          }, { once: true });
         }
         document.readyState === 'loading'
           ? document.addEventListener('DOMContentLoaded', init)
