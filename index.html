@@ -225,6 +225,81 @@
       backdrop-filter: blur(8px)
     }
 
+    /* Language dropdown */
+    .lang-drop {
+      position: relative
+    }
+
+    .lang-drop-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-family: var(--ff-en);
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .18em;
+      color: rgba(220, 190, 140, .9);
+      background: rgba(4, 2, 1, .55);
+      border: 1px solid rgba(200, 148, 58, .22);
+      padding: 7px 14px;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: all .25s
+    }
+
+    .lang-drop-btn:hover {
+      color: #fff;
+      border-color: rgba(200, 148, 58, .5)
+    }
+
+    .lang-drop-arrow {
+      transition: transform .25s;
+      opacity: .7
+    }
+
+    .lang-drop.open .lang-drop-arrow {
+      transform: rotate(180deg)
+    }
+
+    .lang-drop-list {
+      display: none;
+      position: absolute;
+      top: calc(100% + 6px);
+      right: 0;
+      min-width: 160px;
+      background: rgba(14, 10, 5, .96);
+      border: 1px solid rgba(200, 148, 58, .25);
+      backdrop-filter: blur(16px);
+      list-style: none;
+      padding: 4px 0;
+      z-index: 999
+    }
+
+    .lang-drop.open .lang-drop-list {
+      display: block
+    }
+
+    .lang-drop-list li {
+      font-family: var(--ff-en);
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .15em;
+      color: rgba(220, 190, 140, .85);
+      padding: 9px 18px;
+      cursor: pointer;
+      transition: all .2s
+    }
+
+    .lang-drop-list li:hover {
+      background: rgba(200, 148, 58, .12);
+      color: #fff
+    }
+
+    .lang-drop-list li[aria-selected="true"] {
+      color: var(--ember);
+      background: rgba(200, 148, 58, .08)
+    }
+
     .lb {
       font-family: var(--ff-en);
       font-size: .75rem;
@@ -515,18 +590,19 @@
     h1.hero-hl {
       font-family: var(--ff-en);
       font-weight: 900;
-      font-size: clamp(2.6rem, 5.8vw, 5rem);
+      font-size: clamp(2rem, 4.2vw, 3.6rem);
       line-height: 1.0;
       letter-spacing: -.01em;
       color: #e74c3c;
+      text-align: center;
       text-shadow: 0 2px 12px rgba(0, 0, 0, 1), 0 4px 40px rgba(0, 0, 0, 1), 0 0 80px rgba(0, 0, 0, .9), 0 0 120px rgba(231, 76, 60, .25);
       margin-bottom: 1.2rem
     }
 
     html.lang-ko h1.hero-hl,
     html.lang-ja h1.hero-hl {
-      font-size: clamp(2.5rem, 7vw, 6.5rem);
-      line-height: 1.1
+      font-size: clamp(1.8rem, 3.8vw, 3.2rem);
+      line-height: 1.15
     }
 
     .hero-hl-stroke {
@@ -539,14 +615,14 @@
 
     .hero-sub {
       max-width: 560px;
-      font-size: clamp(1.25rem, 2.4vw, 1.65rem);
+      font-size: clamp(1rem, 1.6vw, 1.2rem);
       font-weight: 400;
       font-style: italic;
       color: #fff;
       line-height: 1.8;
       margin-bottom: 1.8rem;
-      background: rgba(28, 18, 8, .82);
-      padding: 18px 22px;
+      background: rgba(28, 18, 8, .35);
+      padding: 14px 18px;
       border-left: 3px solid rgba(200, 148, 58, .7)
     }
 
@@ -568,7 +644,7 @@
       display: inline-flex;
       align-items: center;
       font-family: var(--ff-en);
-      font-size: 1.4rem;
+      font-size: 1.6rem;
       font-weight: 900;
       letter-spacing: .18em;
       text-transform: uppercase;
@@ -594,9 +670,10 @@
       display: flex;
       align-items: center;
       gap: 18px;
-      padding: 28px 72px 28px 60px;
+      padding: 34px 84px 34px 70px;
       position: relative;
-      z-index: 1
+      z-index: 1;
+      white-space: nowrap
     }
 
     .cta::before {
@@ -2920,9 +2997,9 @@
 
     .hero-replay {
       position: absolute;
-      bottom: 90px;
-      right: 0;
-      left: 0;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       z-index: 6;
       display: none;
       align-items: center;
@@ -3319,7 +3396,7 @@
     .final-cta-section {
       position: relative;
       overflow: hidden;
-      padding: 120px 24px 140px;
+      padding: 70px 24px 80px;
       background: linear-gradient(180deg, #0e0a05, #1a1108 20%, #241608 50%, #1a1108 80%, #0e0a05);
       text-align: center
     }
@@ -3398,7 +3475,7 @@
     .final-cta-h {
       font-family: var(--ff-en);
       font-weight: 900;
-      font-size: clamp(2.2rem, 6vw, 4.5rem);
+      font-size: clamp(1.8rem, 4vw, 3rem);
       color: #e74c3c;
       line-height: 1.05;
       margin-bottom: 16px;
@@ -3925,14 +4002,23 @@
       WHERE WINDS MEET
       <span class="nav-center-icon">⚔</span>
     </div>
-    <div class="lang-row" role="group" aria-label="Language selector">
-      <button class="lb on" data-lang="en" aria-pressed="true">EN</button>
-      <button class="lb" data-lang="ko" aria-pressed="false">KO</button>
-      <button class="lb" data-lang="ja" aria-pressed="false">JA</button>
-      <button class="lb" data-lang="ru" aria-pressed="false">RU</button>
-      <button class="lb" data-lang="vi" aria-pressed="false">VI</button>
-      <button class="lb" data-lang="th" aria-pressed="false">TH</button>
-      <button class="lb" data-lang="tw" aria-pressed="false">TW</button>
+    <div class="lang-drop" id="lang-drop">
+      <button class="lang-drop-btn" id="lang-drop-btn" aria-haspopup="listbox" aria-expanded="false">
+        <span style="filter:sepia(1) saturate(4) hue-rotate(5deg) brightness(1.2)">🌐</span>
+        <span id="lang-drop-label">EN</span>
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true" class="lang-drop-arrow">
+          <path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <ul class="lang-drop-list" id="lang-drop-list" role="listbox">
+        <li role="option" data-lang="en" aria-selected="true">EN — English</li>
+        <li role="option" data-lang="ko" aria-selected="false">KO — 한국어</li>
+        <li role="option" data-lang="ja" aria-selected="false">JA — 日本語</li>
+        <li role="option" data-lang="ru" aria-selected="false">RU — Русский</li>
+        <li role="option" data-lang="vi" aria-selected="false">VI — Tiếng Việt</li>
+        <li role="option" data-lang="th" aria-selected="false">TH — ภาษาไทย</li>
+        <li role="option" data-lang="tw" aria-selected="false">TW — 繁體中文</li>
+      </ul>
     </div>
   </nav>
 
@@ -3992,18 +4078,18 @@
     </div>
     <div class="embers" id="embers" aria-hidden="true"></div>
     <div class="hero-content">
-      <!-- GAME TITLE IDENTITY -->
-      <div class="game-title-wrap rv">
-
-        <img id="hero-logo" src="" alt="Where Winds Meet"
-          style="height:clamp(40px,6vw,72px);width:auto;display:none;object-fit:contain;filter:brightness(0) invert(1);opacity:.9;margin-bottom:4px">
-        <div class="game-title" id="game-title-text" data-i18n="game.name">WHERE WINDS MEET</div>
-      </div>
-
       <h1 class="hero-hl rv d1">
         <span data-i18n="hero.h1">A World With No Rules.</span>
         <span class="hero-hl-stroke" data-i18n="hero.h2">Except the Ones You Write.</span>
       </h1>
+
+      <!-- GAME TITLE IDENTITY -->
+      <div style="margin-top:8rem">
+      <div class="game-title-wrap rv d2">
+        <img id="hero-logo" src="" alt="Where Winds Meet"
+          style="height:clamp(40px,6vw,72px);width:auto;display:none;object-fit:contain;filter:brightness(0) invert(1);opacity:.9;margin-bottom:4px">
+        <div class="game-title" id="game-title-text" data-i18n="game.name">WHERE WINDS MEET</div>
+      </div>
       <p class="hero-sub rv d2" data-i18n="hero.sub">Step into 10th-century China — a vast open world where you master martial arts, forge alliances, and carve your own legend. No two paths are the same.</p>
       <div class="hero-acts rv d3" style="flex-wrap:wrap;gap:14px;align-items:center">
         <a href="https://to.wendiro.com/u?k=9db47141846349488810b469b5a18a32&via=16314" class="cta" id="hero-cta"
@@ -4022,28 +4108,25 @@
         </a>
       </div>
       <p class="hero-note rv d3" data-i18n="hero.note">Free to play · No credit card · Available now on PC via Steam</p>
-      <div class="chips rv d4" role="list" aria-label="Game features" style="padding-top:32px">
+      <div class="chips rv d4" role="list" aria-label="Game features" style="padding-top:32px;align-items:center">
         <span class="chip" role="listitem" data-i18n="chip1">Open World</span>
         <span class="chip" role="listitem" data-i18n="chip2">Martial Arts</span>
         <span class="chip" role="listitem" data-i18n="chip3">Co-op</span>
         <span class="chip" role="listitem" data-i18n="chip4">Ancient China</span>
         <span class="chip" role="listitem" data-i18n="chip5">Wuxia RPG</span>
+        <a href="https://to.wendiro.com/u?k=9db47141846349488810b469b5a18a32&via=16314" aria-label="Play on Steam" target="_blank" rel="noopener noreferrer"
+          style="display:inline-flex;align-items:center;margin-left:16px;opacity:.85;transition:opacity .25s">
+          <img src="assets/images/steam_logo.webp" alt="Steam" style="height:40px;width:auto;display:block;mix-blend-mode:screen">
+        </a>
+        <a href="#trailer-section"
+          style="display:inline-flex;align-items:center;gap:8px;font-family:var(--ff-en);font-size:1rem;font-weight:900;letter-spacing:.2em;text-transform:uppercase;color:#000;text-decoration:none;transition:all .25s;border:1.5px solid rgba(0,0,0,.6);padding:6px 16px;background:rgba(255,255,255,.15);backdrop-filter:blur(4px)">
+          <svg width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <polygon points="2,1 11,6 2,11" fill="currentColor" opacity=".9"/>
+          </svg>
+          <span data-i18n="tra.watch">Watch Trailer</span>
+        </a>
       </div>
-    </div>
-
-    <!-- Platform Badges -->
-    <div class="hero-platforms" aria-label="Available platforms">
-      <a href="https://to.wendiro.com/u?k=9db47141846349488810b469b5a18a32&via=16314" id="steam-badge-btn"
-        class="hero-platform-btn" aria-label="Play on Steam" target="_blank" rel="noopener noreferrer">
-        <img src="assets/images/steam_logo.webp" alt="Steam" class="hero-platform-img">
-        <span class="hero-platform-label">Steam</span>
-      </a>
-      <div class="hero-platform-divider" aria-hidden="true"></div>
-      <a href="https://to.wendiro.com/u?k=9db47141846349488810b469b5a18a32&via=16314" id="win-badge-btn"
-        class="hero-platform-btn" aria-label="Available on Windows PC" target="_blank" rel="noopener noreferrer">
-        <img src="assets/images/windows_logo.webp" alt="Windows" class="hero-platform-img">
-        <span class="hero-platform-label">Windows</span>
-      </a>
+      </div>
     </div>
 
     <div class="hero-baseline" aria-hidden="true"></div>
@@ -4115,7 +4198,7 @@
     </div>
 
 
-    <section class="trailer-section" aria-labelledby="trailer-h">
+    <section class="trailer-section" id="trailer-section" aria-labelledby="trailer-h">
       <div class="trailer-inner">
         <div class="trailer-header">
           <p class="section-tag rv" data-i18n="tra.tag">Official Trailer</p>
@@ -5141,7 +5224,7 @@
             'wpn.w7.n': 'Umbrella', 'wpn.w7.d': 'A shelter and a slaughter — in the same hand.',
             'gal.tag': 'The World Awaits', 'gal.h': 'See the Jianghu',
             'gal.l1': 'The Martial World', 'gal.l2': 'Where the Rain Falls', 'gal.l3': 'Where Legends Are Born', 'gal.l4': 'Ancient Paths', 'gal.l5': 'The Wandering Seeker',
-            'tra.tag': 'Official Trailer', 'tra.h': 'Witness the Legend', 'tra.sub': 'Watch the world come alive.', 'tra.cta': 'Enter Jianghu',
+            'tra.tag': 'Official Trailer', 'tra.h': 'Witness the Legend', 'tra.sub': 'Watch the world come alive.', 'tra.cta': 'Enter Jianghu', 'tra.watch': 'Watch Trailer',
             'rev.tag': 'What Players Say', 'rev.h': 'The Jianghu Speaks',
             'rev.s1.lbl': 'Steam Reviews', 'rev.s1.sub': 'All languages combined',
             'rev.s2.lbl': 'Very Positive', 'rev.s2.sub': 'English reviews rating',
@@ -5177,7 +5260,7 @@
             'meta.t': 'Where Winds Meet — 강호 입문',
             'game.badge': '오픈 월드 무협 RPG', 'game.name': '바람이 만나는 곳', 'game.tagline': '10세기 중국 · 무료 플레이 · PC',
             'hero.ey': '모든 검에는 이야기가 있다. 당신의 것을 써라.', 'hero.h1': '규칙 없는 세계.', 'hero.h2': '오직 당신이 쓰는 것만이 규칙이다.',
-            'hero.sub': '고대의 세계가 당신을 지켜보고 있다. 모든 길은 어떤 지도도 보여줄 수 없는 곳으로 이어진다.',
+            'hero.sub': '10세기 중국으로 발을 들이세요 — 무술을 연마하고, 동맹을 맺고, 나만의 전설을 새기는 광활한 오픈 월드. 같은 길은 없습니다.',
             'hero.cta': '전설을 차지하라 — 무료', 'hero.note': '무료 플레이. 강호는 단 하나만 요구한다: 들어올 것.',
             'chip1': '오픈 월드', 'chip2': '무술', 'chip3': '협동 플레이', 'chip4': '고대 중국', 'chip5': '무협 RPG',
             'world.tag': '살아 숨쉬는 세계', 'world.h': '모든 바람에는 이름이 있다',
@@ -5196,7 +5279,7 @@
             'wpn.w7.n': '우산', 'wpn.w7.d': '피난처이자 학살.',
             'gal.tag': '세계가 기다린다', 'gal.h': '강호를 보라',
             'gal.l1': '무협의 세계', 'gal.l2': '비가 내리는 곳', 'gal.l3': '전설이 태어나는 곳', 'gal.l4': '고대의 길', 'gal.l5': '방랑하는 탐구자',
-            'tra.tag': '공식 트레일러', 'tra.h': '전설을 목격하라', 'tra.sub': '세계가 살아 숨쉬는 모습을 보라.', 'tra.cta': '강호 입문',
+            'tra.tag': '공식 트레일러', 'tra.h': '전설을 목격하라', 'tra.sub': '세계가 살아 숨쉬는 모습을 보라.', 'tra.cta': '강호 입문', 'tra.watch': '트레일러 보기',
             'rev.tag': '플레이어들의 이야기', 'rev.h': '강호가 말하다',
             'rev.s1.lbl': 'Steam 리뷰', 'rev.s1.sub': '전체 언어 합산',
             'rev.s2.lbl': '매우 긍정적', 'rev.s2.sub': '영어 리뷰 평가',
@@ -5251,7 +5334,7 @@
             'wpn.w7.n': '傘', 'wpn.w7.d': '避難所と殺戮が宿る。',
             'gal.tag': '世界が待つ', 'gal.h': '江湖を見よ',
             'gal.l1': '武侠の世界', 'gal.l2': '雨が降る場所', 'gal.l3': '伝説が生まれる場所', 'gal.l4': '古の道', 'gal.l5': 'さすらいの探求者',
-            'tra.tag': '公式トレーラー', 'tra.h': '伝説を目撃せよ', 'tra.sub': '世界が息吹く瞬間を見よ。', 'tra.cta': '江湖へ進む',
+            'tra.tag': '公式トレーラー', 'tra.h': '伝説を目撃せよ', 'tra.sub': '世界が息吹く瞬間を見よ。', 'tra.cta': '江湖へ進む', 'tra.watch': 'トレーラーを見る',
             'rev.tag': 'プレイヤーの声', 'rev.h': '江湖が語る',
             'rev.s1.lbl': 'Steamレビュー', 'rev.s1.sub': '全言語合計',
             'rev.s2.lbl': '非常に好評', 'rev.s2.sub': '英語レビュー評価',
@@ -5312,7 +5395,7 @@
             'wpn.w7.n': 'Зонт', 'wpn.w7.d': 'Защита и расправа — в одной ладони.',
             'gal.tag': 'Мир уже зовёт', 'gal.h': 'Увидь Цзянху',
             'gal.l1': 'Мир боевых искусств', 'gal.l2': 'Там, где приходит дождь', 'gal.l3': 'Там, где рождаются легенды', 'gal.l4': 'Древние тропы', 'gal.l5': 'Странник в поиске',
-            'tra.tag': 'Официальный трейлер', 'tra.h': 'Увидь легенду', 'tra.sub': 'Посмотри, как этот мир оживает.', 'tra.cta': 'Войти в Цзянху',
+            'tra.tag': 'Официальный трейлер', 'tra.h': 'Увидь легенду', 'tra.sub': 'Посмотри, как этот мир оживает.', 'tra.cta': 'Войти в Цзянху', 'tra.watch': 'Смотреть трейлер',
             'rev.tag': 'Что говорят игроки', 'rev.h': 'Цзянху говорит само за себя',
             'rev.s1.lbl': 'Отзывы в Steam', 'rev.s1.sub': 'Все языки вместе',
             'rev.s2.lbl': 'Очень положительные', 'rev.s2.sub': 'Оценка англоязычных отзывов',
@@ -5370,7 +5453,7 @@
             'wpn.w7.n': 'Ô', 'wpn.w7.d': 'Vừa che chở, vừa kết liễu — trong cùng một bàn tay.',
             'gal.tag': 'Thế giới đang chờ', 'gal.h': 'Ngắm nhìn giang hồ',
             'gal.l1': 'Thế giới võ lâm', 'gal.l2': 'Nơi mưa rơi', 'gal.l3': 'Nơi huyền thoại ra đời', 'gal.l4': 'Lối xưa cổ kính', 'gal.l5': 'Người lữ khách đơn hành',
-            'tra.tag': 'Trailer chính thức', 'tra.h': 'Chứng kiến huyền thoại', 'tra.sub': 'Xem thế giới ấy chuyển động và sống dậy.', 'tra.cta': 'Bước vào giang hồ',
+            'tra.tag': 'Trailer chính thức', 'tra.h': 'Chứng kiến huyền thoại', 'tra.sub': 'Xem thế giới ấy chuyển động và sống dậy.', 'tra.cta': 'Bước vào giang hồ', 'tra.watch': 'Xem Trailer',
             'rev.tag': 'Người chơi nói gì', 'rev.h': 'Giang hồ đã lên tiếng',
             'rev.s1.lbl': 'Đánh giá trên Steam', 'rev.s1.sub': 'Tổng hợp mọi ngôn ngữ',
             'rev.s2.lbl': 'Rất tích cực', 'rev.s2.sub': 'Tỷ lệ đánh giá tiếng Anh',
@@ -5428,7 +5511,7 @@
             'wpn.w7.n': 'ร่ม', 'wpn.w7.d': 'ทั้งปกป้องและปลิดชีพในมือเดียว.',
             'gal.tag': 'โลกกำลังรออยู่', 'gal.h': 'มองเห็นยุทธภพด้วยตา',
             'gal.l1': 'โลกแห่งยุทธจักร', 'gal.l2': 'ที่ซึ่งฝนโปรยลงมา', 'gal.l3': 'ที่ซึ่งตำนานถือกำเนิด', 'gal.l4': 'เส้นทางโบราณ', 'gal.l5': 'ผู้แสวงหาที่เดินเดียวดาย',
-            'tra.tag': 'ตัวอย่างอย่างเป็นทางการ', 'tra.h': 'เห็นตำนานด้วยตาของคุณเอง', 'tra.sub': 'ดูโลกใบนี้มีชีวิตขึ้นตรงหน้า.', 'tra.cta': 'ก้าวสู่ยุทธภพ',
+            'tra.tag': 'ตัวอย่างอย่างเป็นทางการ', 'tra.h': 'เห็นตำนานด้วยตาของคุณเอง', 'tra.sub': 'ดูโลกใบนี้มีชีวิตขึ้นตรงหน้า.', 'tra.cta': 'ก้าวสู่ยุทธภพ', 'tra.watch': 'ชมตัวอย่าง',
             'rev.tag': 'เสียงจากผู้เล่น', 'rev.h': 'ยุทธภพพูดแทนตัวเองแล้ว',
             'rev.s1.lbl': 'รีวิวบน Steam', 'rev.s1.sub': 'รวมทุกภาษา',
             'rev.s2.lbl': 'แง่บวกมาก', 'rev.s2.sub': 'คะแนนจากรีวิวภาษาอังกฤษ',
@@ -5486,7 +5569,7 @@
             'wpn.w7.n': '傘', 'wpn.w7.d': '同一隻手裡，既能護你，也能奪命。',
             'gal.tag': '世界正在等你', 'gal.h': '看見這片江湖',
             'gal.l1': '武俠世界', 'gal.l2': '雨落之地', 'gal.l3': '傳奇誕生之所', 'gal.l4': '古道舊跡', 'gal.l5': '行於風中的尋路人',
-            'tra.tag': '官方預告片', 'tra.h': '親眼見證傳奇', 'tra.sub': '看這個世界如何真正活起來。', 'tra.cta': '踏入江湖',
+            'tra.tag': '官方預告片', 'tra.h': '親眼見證傳奇', 'tra.sub': '看這個世界如何真正活起來。', 'tra.cta': '踏入江湖', 'tra.watch': '觀看預告片',
             'rev.tag': '玩家怎麼說', 'rev.h': '江湖自己會說話',
             'rev.s1.lbl': 'Steam 評價', 'rev.s1.sub': '所有語言綜合',
             'rev.s2.lbl': '極度好評', 'rev.s2.sub': '英文評價表現',
@@ -5557,10 +5640,12 @@
             }
           });
           document.title = T[l]['meta.t'] || T.en['meta.t'];
-          document.querySelectorAll('.lb').forEach(function (b) {
-            var on = b.dataset.lang === l;
-            b.classList.toggle('on', on);
-            b.setAttribute('aria-pressed', String(on));
+          // Update dropdown label
+          var lbl = document.getElementById('lang-drop-label');
+          if (lbl) lbl.textContent = l.toUpperCase();
+          document.querySelectorAll('.lang-drop-list li').forEach(function (li) {
+            var on = li.dataset.lang === l;
+            li.setAttribute('aria-selected', String(on));
           });
           if (push) {
             try {
@@ -5571,9 +5656,28 @@
             } catch (e) { }
           }
         }
-        document.querySelectorAll('.lb').forEach(function (b) {
-          b.addEventListener('click', function () { setLang(b.dataset.lang, true); });
-        });
+        // Dropdown toggle
+        var dropBtn = document.getElementById('lang-drop-btn');
+        var dropEl = document.getElementById('lang-drop');
+        var dropList = document.getElementById('lang-drop-list');
+        if (dropBtn && dropEl) {
+          dropBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var open = dropEl.classList.toggle('open');
+            dropBtn.setAttribute('aria-expanded', String(open));
+          });
+          document.addEventListener('click', function () {
+            dropEl.classList.remove('open');
+            dropBtn.setAttribute('aria-expanded', 'false');
+          });
+          document.querySelectorAll('.lang-drop-list li').forEach(function (li) {
+            li.addEventListener('click', function () {
+              setLang(li.dataset.lang, true);
+              dropEl.classList.remove('open');
+              dropBtn.setAttribute('aria-expanded', 'false');
+            });
+          });
+        }
         window.addEventListener('popstate', function () {
           setLang(new URLSearchParams(location.search).get('lang') || 'en', false);
         });
