@@ -117,7 +117,6 @@
     html.lang-ko h1,
     html.lang-ko h2,
     html.lang-ko .card-name,
-    html.lang-ko .lb,
     html.lang-ko .cta,
     html.lang-ko .chip,
     html.lang-ko .paths-label,
@@ -133,7 +132,6 @@
     html.lang-ja h1,
     html.lang-ja h2,
     html.lang-ja .card-name,
-    html.lang-ja .lb,
     html.lang-ja .cta,
     html.lang-ja .chip,
     html.lang-ja .paths-label,
@@ -216,15 +214,6 @@
       display: none
     }
 
-    .lang-row {
-      display: flex;
-      gap: 2px;
-      background: rgba(4, 2, 1, .55);
-      border: 1px solid rgba(200, 148, 58, .22);
-      padding: 3px;
-      backdrop-filter: blur(8px)
-    }
-
     /* Language dropdown */
     .lang-drop {
       position: relative
@@ -298,35 +287,6 @@
     .lang-drop-list li[aria-selected="true"] {
       color: var(--ember);
       background: rgba(200, 148, 58, .08)
-    }
-
-    .lb {
-      font-family: var(--ff-en);
-      font-size: .75rem;
-      font-weight: 700;
-      letter-spacing: .18em;
-      color: rgba(220, 190, 140, .90);
-      padding: 6px 14px;
-      border: none;
-      background: transparent;
-      transition: all .25s;
-      cursor: none
-    }
-
-    .lb:hover {
-      color: #fff;
-      background: rgba(200, 148, 58, .15)
-    }
-
-    .lb.on {
-      color: var(--void);
-      background: linear-gradient(135deg, var(--ember-hi), var(--ember));
-      letter-spacing: .2em
-    }
-
-    .lb:focus-visible {
-      outline: 2px solid var(--ember-hi);
-      outline-offset: 2px
     }
 
     .rv {
@@ -488,43 +448,12 @@
       will-change: opacity
     }
 
-    .hero-veil {
-      display: none
-    }
-
     .embers {
       position: absolute;
       inset: 0;
       z-index: 2;
       pointer-events: none;
       overflow: hidden
-    }
-
-    .em {
-      position: absolute;
-      border-radius: 50%;
-      background: radial-gradient(circle, var(--ember-hi), transparent);
-      animation: rise var(--d, 9s) var(--dl, 0s) infinite ease-out
-    }
-
-    @keyframes rise {
-      0% {
-        opacity: 0;
-        transform: translate(0, 0)
-      }
-
-      8% {
-        opacity: var(--op, .2)
-      }
-
-      90% {
-        opacity: var(--op, .2)
-      }
-
-      100% {
-        opacity: 0;
-        transform: translate(var(--dx, 10px), calc(-60vh))
-      }
     }
 
     .hero-vtext-l,
@@ -810,14 +739,6 @@
       background-size: cover;
       background-position: center 40%;
       background-repeat: no-repeat
-    }
-
-    .world-art-svg {
-      display: none
-    }
-
-    .world-mist {
-      display: none
     }
 
     .world-veil {
@@ -2490,13 +2411,6 @@
         font-size: .52rem;
         letter-spacing: .18em
       }
-
-      .lb {
-        font-size: .52rem;
-        padding: 5px 9px;
-        letter-spacing: .12em
-      }
-
       .hero {
         min-height: 100svh
       }
@@ -2783,14 +2697,6 @@
     }
 
     @media(pointer:coarse) {
-      .lb {
-        min-width: 44px;
-        min-height: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center
-      }
-
       .faq-q {
         min-height: 52px
       }
@@ -2876,34 +2782,6 @@
       font-family: var(--ff-ja)
     }
 
-    .game-title-deco {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 8px
-    }
-
-    .game-title-line {
-      height: 1px;
-      background: linear-gradient(90deg, var(--ember), rgba(200, 148, 58, .3));
-      flex: 1;
-      max-width: 60px
-    }
-
-    .game-title-line.right {
-      background: linear-gradient(270deg, var(--ember), rgba(200, 148, 58, .3))
-    }
-
-    .game-title-badge {
-      font-family: var(--ff-en);
-      font-size: .58rem;
-      font-weight: 700;
-      letter-spacing: .25em;
-      text-transform: uppercase;
-      color: #ffd760;
-      text-shadow: 0 1px 8px rgba(0, 0, 0, 1), 0 0 20px rgba(245, 184, 48, .6)
-    }
-
     .game-subtitle-line {
       display: flex;
       align-items: center;
@@ -2940,10 +2818,6 @@
       .game-title {
         font-size: clamp(1rem, 5.5vw, 1.5rem);
         letter-spacing: .2em
-      }
-
-      .game-title-line {
-        max-width: 36px
       }
 
       .game-subtitle-text {
@@ -3530,76 +3404,6 @@
     /* ═══════════════════════
    HERO PLATFORM BADGES
 ═══════════════════════ */
-    .hero-platforms {
-      position: absolute;
-      right: 48px;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 10;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px
-    }
-
-    .hero-platform-btn {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 7px;
-      text-decoration: none;
-      opacity: .75;
-      transition: opacity .3s ease, transform .3s ease;
-      cursor: pointer
-    }
-
-    .hero-platform-btn:hover {
-      opacity: 1;
-      transform: scale(1.1) translateX(-4px)
-    }
-
-    .hero-platform-img {
-      width: 52px;
-      height: 52px;
-      object-fit: contain;
-      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, .7))
-    }
-
-    .hero-platform-label {
-      font-family: var(--ff-en);
-      font-size: .58rem;
-      font-weight: 900;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      color: #ffffff;
-      text-shadow: 0 1px 8px rgba(0, 0, 0, 1), 0 0 16px rgba(0, 0, 0, 1)
-    }
-
-    .hero-platform-divider {
-      display: none
-    }
-
-    @media(max-width:768px) {
-      .hero-platforms {
-        right: 16px;
-        gap: 14px
-      }
-
-      .hero-platform-img {
-        width: 38px;
-        height: 38px
-      }
-
-      .hero-platform-divider {
-        height: 20px
-      }
-
-      .hero-platform-label {
-        font-size: .36rem
-      }
-    }
-
-
     .nav-center-title {
       position: absolute;
       left: 50%;
@@ -3972,15 +3776,6 @@
   <style>
     /* Performance: defer rendering of off-screen sections */
     .world-section,
-    .paths-section,
-    .gallery-section,
-    .reviews-section,
-    .sysreq-section,
-    .faq-section,
-    .final-cta-section {
-      content-visibility: auto;
-      contain-intrinsic-size: 0 600px;
-    }
   </style>
 </head>
 
@@ -4043,7 +3838,6 @@
     </div>
     <div class="hero-vtext-l" aria-hidden="true">武俠</div>
     <div class="hero-vtext-r" aria-hidden="true">江湖</div>
-    <div class="hero-veil" aria-hidden="true"></div>
 
     <!-- Replay overlay — shows when video ends -->
     <button class="hero-replay" id="hero-replay" aria-label="Replay video" type="button">
@@ -4092,7 +3886,7 @@
       </div>
       <p class="hero-sub rv d2" data-i18n="hero.sub">Step into 10th-century China — a vast open world where you master martial arts, forge alliances, and carve your own legend. No two paths are the same.</p>
       <div class="hero-acts rv d3" style="flex-wrap:wrap;gap:14px;align-items:center">
-        <a href="https://to.wendiro.com/u?k=9db47141846349488810b469b5a18a32&via=16314" class="cta" id="hero-cta"
+        <a href="https://to.wendiro.com/u?k=9db47141846349488810b469b5a18a32&via=16314" class="cta" target="_blank" rel="noopener noreferrer" id="hero-cta"
           data-i18n="hero.cta" aria-label="Play Where Winds Meet on PC">
           <span class="cta-inner">
             <svg class="cta-icon" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
@@ -4229,7 +4023,7 @@
           </button>
         </div>
         <div class="t-cta rv">
-          <a href="https://to.wendiro.com/u?k=9db47141846349488810b469b5a18a32&via=16314" class="cta" id="tra-cta"
+          <a href="https://to.wendiro.com/u?k=9db47141846349488810b469b5a18a32&via=16314" class="cta" target="_blank" rel="noopener noreferrer" id="tra-cta"
             aria-label="Play game on Steam">
             <span class="cta-inner">
               <svg class="cta-icon" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
@@ -4628,8 +4422,6 @@
         <div class="world-art-bg"
           style="background-image:url('assets/images/screenshot_5.webp');background-size:cover;background-position:center 40%">
         </div>
-        <svg class="world-art-svg" style="display:none" viewBox="0 0 1440 500" fill="none" aria-hidden="true"></svg>
-        <div class="world-mist" style="display:none" aria-hidden="true"></div>
         <div class="world-veil">
           <div class="world-center">
             <p class="section-tag rv" data-i18n="world.tag">The Living World</p>
@@ -5024,7 +4816,7 @@
         </div>
         <div class="sysreq-footer rv">
           <p class="sysreq-note" data-i18n="sys.footnote">Requires 64-bit processor and operating system</p>
-          <a href="https://to.wendiro.com/u?k=9db47141846349488810b469b5a18a32&via=16314" class="cta" id="sysreq-cta"
+          <a href="https://to.wendiro.com/u?k=9db47141846349488810b469b5a18a32&via=16314" class="cta" target="_blank" rel="noopener noreferrer" id="sysreq-cta"
             aria-label="Download the game">
             <span class="cta-inner">
               <svg class="cta-icon" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
@@ -5100,7 +4892,7 @@
         <p class="final-cta-sub rv d2" data-i18n="fcta.sub">Thousands have already entered. The wind remembers each of
           them. It is time to add your name.</p>
         <div class="rv d3">
-          <a href="https://to.wendiro.com/u?k=9db47141846349488810b469b5a18a32&via=16314" class="cta" id="final-cta-btn"
+          <a href="https://to.wendiro.com/u?k=9db47141846349488810b469b5a18a32&via=16314" class="cta" target="_blank" rel="noopener noreferrer" id="final-cta-btn"
             aria-label="Play Where Winds Meet for free">
             <span class="cta-inner">
               <svg class="cta-icon" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
@@ -5134,7 +4926,7 @@
 
     <div class="sticky" id="sticky" role="complementary" aria-label="Download prompt">
       <span class="sticky-label" data-i18n="sty.lbl">Where Winds Meet</span>
-      <a href="https://to.wendiro.com/u?k=9db47141846349488810b469b5a18a32&via=16314" class="sticky-btn" id="sty-cta"
+      <a href="https://to.wendiro.com/u?k=9db47141846349488810b469b5a18a32&via=16314" class="sticky-btn" target="_blank" rel="noopener noreferrer" id="sty-cta"
         data-i18n="sty.cta">Play Free on PC</a>
     </div>
 
